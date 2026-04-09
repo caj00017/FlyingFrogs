@@ -1,0 +1,72 @@
+// The following Create Table functions are to be executed once
+// when initializing a new application (init_db.js)
+// The following syntax may differ from actual SQLite syntax
+function createMembersTable() {
+  let sql = `
+    CREATE TABLE Members (
+      member_id INTEGER PRIMARY KEY AUTOINCREMENT,
+      first_name VARCHAR NOT NULL,
+      last_name VARCHAR NOT NULL,
+      email VARCHAR NOT NULL UNIQUE,
+      phone INTEGER NOT NULL,
+      dob DATE NOT NULL
+    );
+  `;
+}
+
+function createMembershipsTable() {
+  let sql = `
+    CREATE TABLE Memberships (
+      membership_id INTEGER PRIMARY KEY AUTOINCREMENT,
+      member_id INTEGER NOT NULL,
+      name VARCHAR NOT NULL,
+      price DECIMAL(10,2) NOT NULL,
+      type VARCHAR NOT NULL, 
+      start_date DATE NOT NULL,
+      expire_date DATE NOT NULL,
+      FOREIGN KEY (member_id) REFERENCES Members(member_id)
+    );
+  `;
+}
+
+function createClassesTable() {
+  let sql = `
+    CREATE TABLE Classes (
+      class_id INTEGER PRIMARY KEY AUTOINCREMENT,
+      class_name VARCHAR(100) NOT NULL,
+      instructor_id INTEGER NOT NULL,
+      date_time DATETIME NOT NULL,
+      num_members INTEGER NOT NULL DEFAULT 0,
+      FOREIGN KEY (instructor_id) REFERENCES Instructors(instructor_id)
+    );
+  `;
+}
+
+function createInstructorsTable() {
+  let sql = `
+    CREATE TABLE Instructors (
+      instructor_id INTEGER PRIMARY KEY AUTOINCREMENT,
+      first_name VARCHAR NOT NULL,
+      last_name VARCHAR NOT NULL,
+      email VARCHAR NOT NULL UNIQUE,
+      phone INTEGER NOT NULL,
+      status TEXT NOT NULL DEFAULT 'active'
+        CHECK (status IN ('active', 'on_leave', 'inactive'))
+    );
+  `;
+}
+
+function createBookingsTable() {
+  let sql = `CREATE TABLE Bookings (
+    booking_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    member_id INTEGER NOT NULL,
+    class_id INTEGER NOT NULL,
+    booking_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    status TEXT NOT NULL DEFAULT 'confirmed'
+      CHECK (status IN ('confirmed', 'cancelled', 'attended', 'no_show')),
+    cancellation_time DATETIME,
+    FOREIGN KEY (member_id) REFERENCES Members(member_id),
+    FOREIGN KEY (class_id) REFERENCES Classes(class_id)
+    );
+  `;
+}
