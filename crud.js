@@ -8,6 +8,8 @@ const { DatabaseSync } = require('node:sqlite');
 const db = new DatabaseSync('source.db');
 
 
+// MEMBERS
+
 /**
  * holy shit vs code auto adds the params in nodejs. That's fucking awesome
  * @param {*} id - Auto generated member_id of the new row (At least I think they're auto gen'd)
@@ -37,11 +39,12 @@ return result.lastInsertRowid;
 
 
 /**
+ * retrieves a single member
  * 
- * Retrieves every member in the members table
+ * @param member_id the ID Of the member
  * @returns {Array<Objects>} an array of all member rows (empty if none exist)
  */
-export function readMember(){
+export function readMember(member_id){
   // get all columns from every row in members table
   const sql = `SELECT * FROM Members WHERE member_id = ?`;
 
@@ -49,13 +52,47 @@ export function readMember(){
 
   const stmt = db.prepare(sql);
 
-  // returns all matching rows as a plaina rray of JS objects
+  return stmt.get(member_id);
+}
+
+/**
+ * Pretty self explanatory, just retrieves every member in members table
+ * 
+ * @returns {Array<Object>} all matching rows as an array of plan js objects
+ */
+export function readAllMembers() {
+  const sql = `SELECT * FROM Members`;
+
+  console.log("Attempting to execute query: " + sql);
+
+  const stmt = db.prepare(sql);
+
   return stmt.all();
 }
 
 
+// MEMBERSHIPS
 
+/**
+ * Inserts a new membership record and links it to an existing member.
+ * A single member can hold multiple memberships over time (e.g. renewals).
+ *
+ * @param {number} member_id reference to the member who owns this membership
+ * @param {string} name Display name for the membership (e.g. "Gold Plan")
+ * @param {number} price Cost of the membership (stored as DECIMAL)
+ * @param {string} type Membership category (e.g. "monthly", "annual")
+ * @param {string} start_date Start date (YYYY-MM-DD)
+ * @param {string} expire_date Expiry date (YYYY-MM-DD)
+ * @returns {number} The auto-generated membership_id of the new row
+ */
+export function createMembership(member_id, name, price, type, start_date, expire_date) {
+  const sql = `
+    INSERT INTO Memberships (member_id, name, price, type, start_date, expire_date)
+    VALUES (?, ?, ?, ?, ?, ?)
+  `;
 
+  return;
+}
 
 
 
