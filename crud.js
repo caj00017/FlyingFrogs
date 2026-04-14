@@ -1,5 +1,6 @@
 // Functions for Create, Read, Update, and Delete
-// Authors: Nathan McDonald, Noah Yoak
+// Authors: Nathan McDonald, Noah Yoak, Chris Jones
+// Version: April 14 2026
 
 // databasesync is like a constructor that opens and talks to database files
 const { DatabaseSync } = require('node:sqlite');
@@ -19,24 +20,23 @@ const db = new DatabaseSync('source.db');
  * @param {*} phone memebrs phone number
  * @param {*} dob memebers date of birth (YYY-MM-DD)
  */
-export function createMember(id, first_name, last_name, email, phone, dob) {
+function createMember(id, first_name, last_name, email, phone, dob) {
   let sql = `
   INSERT INTO Members  (first_name, last_name, email, phone, dob)
   VALUES (?, ?, ?, ?, ?)
   ;`
 
 
-console.log("Executing query, let's hoep this works: " + sql);
+  console.log("Executing query, let's hoep this works: " + sql);
 
 
-// apparently this stops sql injections to which is pretty cool becuase it compiles the sql structure before user data touches it
-const stmt = db.prepare(sql);
+  // apparently this stops sql injections to which is pretty cool becuase it compiles the sql structure before user data touches it
+  const stmt = db.prepare(sql);
 
-const result = stmt.run(first_name, last_name, email, phone, dob); 
+  const result = stmt.run(first_name, last_name, email, phone, dob); 
 
-return result.lastInsertRowid;
+  return result.lastInsertRowid;
 }
-
 
 /**
  * retrieves a single member
@@ -44,7 +44,7 @@ return result.lastInsertRowid;
  * @param member_id the ID Of the member
  * @returns {Array<Objects>} an array of all member rows (empty if none exist)
  */
-export function readMember(member_id){
+function readMember(member_id){
   // get all columns from every row in members table
   const sql = `SELECT * FROM Members WHERE member_id = ?`;
 
@@ -60,7 +60,7 @@ export function readMember(member_id){
  * 
  * @returns {Array<Object>} all matching rows as an array of plan js objects
  */
-export function readAllMembers() {
+function readAllMembers() {
   const sql = `SELECT * FROM Members`;
 
   console.log("Attempting to execute query: " + sql);
@@ -85,7 +85,7 @@ export function readAllMembers() {
  * @param {string} expire_date Expiry date (YYYY-MM-DD)
  * @returns {number} The auto-generated membership_id of the new row
  */
-export function createMembership(member_id, name, price, type, start_date, expire_date) {
+function createMembership(member_id, name, price, type, start_date, expire_date) {
   const sql = `
     INSERT INTO Memberships (member_id, name, price, type, start_date, expire_date)
     VALUES (?, ?, ?, ?, ?, ?)
@@ -101,3 +101,108 @@ function updateMember(id, first_name, last_name, email, phone, dob){
 
 
 }
+
+/**
+ * Pretty self explanatory, just retrieves every membership in memberships table
+ * 
+ * @returns {Array<Object>} all matching rows as an array of plan js objects
+ */
+function readAllMemberships() {
+  const sql = `SELECT * FROM Memberships`;
+
+  console.log("Attempting to execute query: " + sql);
+
+  const stmt = db.prepare(sql);
+
+  return stmt.all();
+}
+
+
+///// INSTRUCTORS /////
+
+/**
+ * Retrieve all instructors from the instructors table
+ * @returns {Array<Object>} All rows in the Instructors table as an array of JS objects.
+ * @author Chris Jones
+*/
+function readAllInstructors() {
+
+  // select all instructors
+  const sql = "SELECT * FROM Instructors";
+
+  // announce query for debugging
+  console.log("Attempting to execute query: " + sql);
+
+  // prepare statement
+  const stmt = db.prepare(sql);
+
+  // execute and return
+  return stmt.all();
+
+}
+
+///////////////////////
+
+///// CLASSES /////
+
+/**
+ * Retrieve all classes from the classes table
+ * @returns {Array<Object>} All rows in the Classes table as an array of JS objects.
+ * @author Chris Jones
+*/
+function readAllClasses() {
+
+  // select all classes
+  const sql = "SELECT * FROM Classes";
+
+  // announce query for debugging
+  console.log("Attempting to execute query: " + sql);
+
+  // prepare statement
+  const stmt = db.prepare(sql);
+
+  // execute and return
+  return stmt.all();
+  
+}
+
+///////////////////
+
+///// BOOKINGS /////
+
+/**
+ * Retrieve all Bookings from the Bookings table
+ * @returns {Array<Object>} All rows in the Bookings table as an array of JS objects.
+ * @author Chris Jones
+*/
+function readAllBookings() {
+
+  // select all Bookings
+  const sql = "SELECT * FROM Bookings";
+
+  // announce query for debugging
+  console.log("Attempting to execute query: " + sql);
+
+  // prepare statement
+  const stmt = db.prepare(sql);
+
+  // execute and return
+  return stmt.all();
+
+}
+
+////////////////////
+
+// Export modules, this is CommonJS syntax (package.json shows type: commonjs).
+// The export keyword is used in "ES module" syntax (used by React, etc.)
+// The app was crashing here before, so hopefully this fixes it
+module.exports = {
+  createMember,
+  readMember,
+  readAllMembers,
+  createMembership,
+  readAllMemberships,
+  readAllInstructors,
+  readAllClasses,
+  readAllBookings,
+};

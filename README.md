@@ -5,13 +5,21 @@ Welcome to Flying Frogs. This project is in early active development. The app is
 # Running the app
 
 Clone the repository
+
 ```git clone https://github.com/caj00017/FlyingFrogs.git```
 
 Ensure packages are installed
+
 ```npm install```
 
+Initialize the database
+
+```node init_db.js```
+
 Start the app
+
 ```npm run start```
 
 Alternatively, run for development with nodemon
+
 ```npm run dev```

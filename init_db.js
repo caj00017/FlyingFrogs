@@ -4,12 +4,12 @@
 // Authors: Nathan McDonald, Chris Jones
 
 // use the DatabaseSync API from the built-in sqlite module.
-const { DatabaseSync } = require('node:sqlite');
+const Database = require('better-sqlite3');
 
 // specify the db file, if it doesn't exist already, it's created here
-const db = new DatabaseSync('source.db');
+const db = new Database('source.db');
 
-export function createMembersTable() {
+function createMembersTable() {
     // building the query that will create a new table for Members
     let sql = `
         CREATE TABLE Members (
@@ -27,7 +27,7 @@ export function createMembersTable() {
     db.exec(sql);
 }
 
-export function createMembershipsTable() {
+function createMembershipsTable() {
     // building the query that will create a new table for Memberships
     let sql = `
         CREATE TABLE Memberships (
@@ -47,7 +47,7 @@ export function createMembershipsTable() {
     db.exec(sql);
 }
 
-export function createClassesTable() {
+function createClassesTable() {
     // building the query that will create a new table for Classes
     let sql = `
         CREATE TABLE Classes (
@@ -65,7 +65,7 @@ export function createClassesTable() {
     db.exec(sql);
 }
 
-export function createInstructorsTable() {
+function createInstructorsTable() {
     // building the query that will create a new table for Instructors
     let sql = `
         CREATE TABLE Instructors (
@@ -84,7 +84,7 @@ export function createInstructorsTable() {
     db.exec(sql);
 }
 
-export function createBookingsTable() {
+function createBookingsTable() {
     // building the query that will create a new table for Bookings
     let sql = `CREATE TABLE Bookings (
         booking_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -103,3 +103,21 @@ export function createBookingsTable() {
     console.log("Attempting to execute query: " + sql);
     db.exec(sql);
 }
+
+// create all necessary tables for the app
+createMembersTable();
+createInstructorsTable();
+createClassesTable();
+createMembershipsTable();
+createBookingsTable();
+
+// export each function to be used in other files
+// now that i think about it, this actually might not be necessary, since this
+// file is only executed once at the first initialization of the app
+module.exports = {
+    createMembersTable,
+    createMembershipsTable,
+    createClassesTable,
+    createInstructorsTable,
+    createBookingsTable
+};
