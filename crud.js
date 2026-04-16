@@ -140,7 +140,15 @@ function createMembership(member_id, name, price, type, start_date, expire_date)
  * @author Chris Jones
  */
 function readMembership(membership_id) {
-  
+  // prepare query to select a specific Member based on their id
+  const sql = "SELECT * FROM Memberships WHERE membership_id = ?"
+
+  // notify query execution and compile query
+  console.log("Attempting to execute query: " + sql);
+  const stmt = db.prepare(sql);
+
+  // run the query and return the result
+  return stmt.get(membership_id);
 }
 
 /**
@@ -160,6 +168,22 @@ function readAllMemberships() {
 
 
 ///// INSTRUCTORS /////
+
+function createInstructor(member_id, first_name, last_name, email, phone, dob, status) {
+  // prepare query to create an instructor based on the given values
+  const sql = `INSERT INTO Instructors (member_id, first_name, last_name, email, phone, dob, status)
+  VALUES (?, ?, ?, ?, ?, ?, ?)`;
+
+  // notify query execution and compile the query
+  console.log("Preparing to execute query: " + sql);
+  const stmt = db.prepare(sql);
+
+  // execute the query
+  const result = stmt.run(member_id, first_name, last_name, email, phone, dob, status); 
+
+  // return the result of the query execution
+  return result.lastInsertRowid;
+}
 
 /**
  * Retrieve all instructors from the instructors table
