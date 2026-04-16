@@ -218,9 +218,9 @@ function deleteMembership(membership_id) {
 
 ///// INSTRUCTORS /////
 
-function createInstructor(member_id, first_name, last_name, email, phone, dob, status) {
+function createInstructor(instructor_id, first_name, last_name, email, phone, dob, status) {
   // prepare query to create an instructor based on the given values
-  const sql = `INSERT INTO Instructors (member_id, first_name, last_name, email, phone, dob, status)
+  const sql = `INSERT INTO Instructors (instructor_id, first_name, last_name, email, phone, dob, status)
   VALUES (?, ?, ?, ?, ?, ?, ?)`;
 
   // notify query execution and compile the query
@@ -228,10 +228,26 @@ function createInstructor(member_id, first_name, last_name, email, phone, dob, s
   const stmt = db.prepare(sql);
 
   // execute the query
-  const result = stmt.run(member_id, first_name, last_name, email, phone, dob, status); 
+  const result = stmt.run(instructor_id, first_name, last_name, email, phone, dob, status); 
 
   // return the result of the query execution
   return result.lastInsertRowid;
+}
+
+/**
+ * 
+ * @param {*} instructor_id the ID of the instructor to read
+ */
+function readInstructor(instructor_id) {
+  // prepare query to select a specific Instructor based on their id
+  const sql = "SELECT * FROM Instructor WHERE instructor_id = ?"
+
+  // notify query execution and compile query
+  console.log("Attempting to execute query: " + sql);
+  const stmt = db.prepare(sql);
+
+  // run the query and return the result
+  return stmt.get(instructor_id);
 }
 
 /**
@@ -377,6 +393,37 @@ function deleteClass(class_id) {
 ///////////////////
 
 ///// BOOKINGS /////
+
+function createBooking(booking_id, member_id, class_id, booking_datetime, cancellation_datetime, status) {
+  // prepare query to create a Booking based on the given values
+  const sql = `
+    INSERT INTO Bookings (booking_id, member_id, class_id, booking_datetime, cancellation_datetime, status)
+    VALUES (?, ?, ?, ?, ?, ?)
+  `;
+
+  // notify query execution and compile query
+  console.log("Attempting to execute query: " + sql);
+  const stmt = db.prepare(sql);
+
+  // execute the query and return result
+  const result = stmt.run(booking_id, member_id, class_id, booking_datetime, cancellation_datetime, status);
+  return result.lastInsertRowid;
+}
+
+/**
+ * @param {*} booking_id the ID of the class booking to read
+ */
+function readBooking(booking_id) {
+  // prepare query to select a specific Booking based on its id
+  const sql = "SELECT * FROM Bookings WHERE booking_id = ?"
+
+  // notify query execution and compile query
+  console.log("Attempting to execute query: " + sql);
+  const stmt = db.prepare(sql);
+
+  // run the query and return the result
+  return stmt.get(booking_id);
+}
 
 /**
  * Retrieve all Bookings from the Bookings table
