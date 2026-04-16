@@ -22,13 +22,11 @@ const db = new DatabaseSync('source.db');
  */
 function createMember(id, first_name, last_name, email, phone, dob) {
   let sql = `
-  INSERT INTO Members  (first_name, last_name, email, phone, dob)
+  INSERT INTO Members (first_name, last_name, email, phone, dob)
   VALUES (?, ?, ?, ?, ?)
   ;`
 
-
   console.log("Executing query, let's hoep this works: " + sql);
-
 
   // apparently this stops sql injections to which is pretty cool becuase it compiles the sql structure before user data touches it
   const stmt = db.prepare(sql);
@@ -70,6 +68,44 @@ function readAllMembers() {
   return stmt.all();
 }
 
+/**
+ * 
+ * @param {*} id the ID of the member to update
+ * @param {*} first_name the member's first name
+ * @param {*} last_name the member's last name
+ * @param {*} email the member's email
+ * @param {*} phone the member's phone #
+ * @param {*} dob the member's birthday
+ * @returns 
+ */
+function updateMember(id, first_name, last_name, email, phone, dob){
+  let sql = "UPDATE Members SET first_name = ?, last_name = ?, email = ?, phone = ? WHERE id = ?"
+
+  console.log("Attempting to executre query: " + sql);
+
+  const stmt = db.prepare(sql);
+
+  const result = stmt.run(id, first_name, last_name, email, phone, dob);
+  return result.lastInsertRowid;
+
+}
+
+/**
+ * @param {*} id the ID of the member to delete
+ * @author Chris Jones
+ */
+function deleteMember(id) {
+  // prepare query to delete a specific member based on their id
+  let sql = "DELETE FROM Members WHERE id = ?";
+
+  // notify query execution and compile query
+  console.log("Attempting to execute query: " + sql);
+  const stmt = db.prepare(sql);
+
+  // run the query and return the result
+  const result = stmt.run(id);
+  return result.lastInsertRowid;
+}
 
 // MEMBERSHIPS
 
@@ -91,15 +127,20 @@ function createMembership(member_id, name, price, type, start_date, expire_date)
     VALUES (?, ?, ?, ?, ?, ?)
   `;
 
-  return;
+  console.log("Attempting to execute query: " + sql);
+
+  const stmt = db.prepare(sql);
+
+  const result = stmt.run(member_id, name, price, type, start_date, expire_date);
+  return result.lastInsertRowid;
 }
 
-
-
-function updateMember(id, first_name, last_name, email, phone, dob){
-  let sql = "UPDATE Members SET first_name = ?, last_name = ?, email = ?, phone = ? WHERE id = ?"
-
-
+/**
+ * @param {*} membership_id the ID of the membership to read
+ * @author Chris Jones
+ */
+function readMembership(membership_id) {
+  
 }
 
 /**
