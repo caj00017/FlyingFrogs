@@ -3,10 +3,10 @@
 // Version: April 14 2026
 
 // databasesync is like a constructor that opens and talks to database files
-const { DatabaseSync } = require('node:sqlite');
+const Database = require('better-sqlite3');
 
 // opens the sqlite database file. sqlite creates it if it doesn't exist i believe
-const db = new DatabaseSync('source.db');
+const db = new Database('source.db');
 
 
 // MEMBERS
@@ -79,8 +79,11 @@ function readAllMembers() {
  * @returns 
  */
 function updateMember(id, first_name, last_name, email, phone, dob){
-  let sql = "UPDATE Members SET first_name = ?, last_name = ?, email = ?, phone = ? WHERE id = ?"
-
+   const sql = `
+    UPDATE Members
+    SET first_name = ?, last_name = ?, email = ?, phone = ?, dob = ?
+    WHERE id = ?
+  `;
   console.log("Attempting to executre query: " + sql);
 
   const stmt = db.prepare(sql);
@@ -166,6 +169,52 @@ function readAllMemberships() {
   return stmt.all();
 }
 
+/**
+ * Updates an existing membership record.
+ *
+ * @param {number} membership_id - The ID of the membership to update
+ * @param {number} member_id - Updated reference to the owning member
+ * @param {string} name - Updated display name
+ * @param {number} price - Updated price
+ * @param {string} type - Updated membership category
+ * @param {string} start_date - Updated start date (YYYY-MM-DD)
+ * @param {string} expire_date - Updated expiry date (YYYY-MM-DD)
+ * @returns {number} Number of rows affected (0 means no membership with that ID was found)
+ */
+function updateMembership(membership_id, member_id, name, price, type, start_date, expire_date) {
+  const sql = `
+    UPDATE Memberships
+    SET member_id = ?, name = ?, price = ?, type = ?, start_date = ?, expire_date = ?
+    WHERE membership_id = ?
+  `;
+ 
+  console.log("Attempting to execute query: " + sql);
+ 
+  const stmt = db.prepare(sql);
+ 
+  const result = stmt.run(member_id, name, price, type, start_date, expire_date, membership_id);
+ 
+  return result.changes;
+}
+ 
+/**
+ * Deletes a membership record from the database.
+ *
+ * @param {number} membership_id - The ID of the membership to delete
+ * @returns {number} Number of rows affected (0 means no membership with that ID was found)
+ */
+function deleteMembership(membership_id) {
+  const sql = `DELETE FROM Memberships WHERE membership_id = ?`;
+ 
+  console.log("Attempting to execute query: " + sql);
+ 
+  const stmt = db.prepare(sql);
+ 
+  const result = stmt.run(membership_id);
+ 
+  return result.changes;
+}
+
 
 ///// INSTRUCTORS /////
 
@@ -206,6 +255,53 @@ function readAllInstructors() {
 
 }
 
+/**
+ * Updates an existing instructor record.
+ * Note: update this function's params to match your actual Instructors table columns.
+ *
+ * @param {number} instructor_id - The ID of the instructor to update
+ * @param {string} first_name - Updated first name
+ * @param {string} last_name - Updated last name
+ * @param {string} email - Updated email address
+ * @param {string} phone - Updated phone number
+ * @returns {number} Number of rows affected (0 means no instructor with that ID was found)
+ * @author Nathan McDonald
+ */
+function updateInstructor(instructor_id, first_name, last_name, email, phone) {
+  const sql = `
+    UPDATE Instructors
+    SET first_name = ?, last_name = ?, email = ?, phone = ?
+    WHERE instructor_id = ?
+  `;
+ 
+  console.log("Attempting to execute query: " + sql);
+ 
+  const stmt = db.prepare(sql);
+ 
+  const result = stmt.run(first_name, last_name, email, phone, instructor_id);
+ 
+  return result.changes;
+}
+ 
+/**
+ * Deletes an instructor from the database.
+ *
+ * @param {number} instructor_id - The ID of the instructor to delete
+ * @returns {number} Number of rows affected (0 means no instructor with that ID was found)
+ * @author Nathan McDonald
+ */
+function deleteInstructor(instructor_id) {
+  const sql = `DELETE FROM Instructors WHERE instructor_id = ?`;
+ 
+  console.log("Attempting to execute query: " + sql);
+ 
+  const stmt = db.prepare(sql);
+ 
+  const result = stmt.run(instructor_id);
+ 
+  return result.changes;
+}
+
 ///////////////////////
 
 ///// CLASSES /////
@@ -229,6 +325,53 @@ function readAllClasses() {
   // execute and return
   return stmt.all();
   
+}
+
+/**
+ * Updates an existing class record.
+ * Note: update this function's params to match your actual Classes table columns.
+ *
+ * @param {number} class_id - The ID of the class to update
+ * @param {number} instructor_id - Updated reference to the instructor teaching the class
+ * @param {string} name - Updated class name
+ * @param {string} schedule - Updated schedule (e.g. "Mon/Wed 9:00 AM")
+ * @param {number} capacity - Updated max number of attendees
+ * @returns {number} Number of rows affected (0 means no class with that ID was found)
+ * @author Nathan McDonald
+ */
+function updateClass(class_id, instructor_id, name, schedule, capacity) {
+  const sql = `
+    UPDATE Classes
+    SET instructor_id = ?, name = ?, schedule = ?, capacity = ?
+    WHERE class_id = ?
+  `;
+ 
+  console.log("Attempting to execute query: " + sql);
+ 
+  const stmt = db.prepare(sql);
+ 
+  const result = stmt.run(instructor_id, name, schedule, capacity, class_id);
+ 
+  return result.changes;
+}
+ 
+/**
+ * Deletes a class from the database.
+ *
+ * @param {number} class_id - The ID of the class to delete
+ * @returns {number} Number of rows affected (0 means no class with that ID was found)
+ * @author Nathan McDonald
+ */
+function deleteClass(class_id) {
+  const sql = `DELETE FROM Classes WHERE class_id = ?`;
+ 
+  console.log("Attempting to execute query: " + sql);
+ 
+  const stmt = db.prepare(sql);
+ 
+  const result = stmt.run(class_id);
+ 
+  return result.changes;
 }
 
 ///////////////////
@@ -256,6 +399,52 @@ function readAllBookings() {
 
 }
 
+/**
+ * Updates an existing booking record.
+ * Note: update this function's params to match your actual Bookings table columns.
+ *
+ * @param {number} booking_id - The ID of the booking to update
+ * @param {number} member_id - Updated reference to the member who made the booking
+ * @param {number} class_id - Updated reference to the booked class
+ * @param {string} booking_date - Updated booking date (YYYY-MM-DD)
+ * @returns {number} Number of rows affected (0 means no booking with that ID was found)
+ * @author Nathan McDonald
+ */
+function updateBooking(booking_id, member_id, class_id, booking_date) {
+  const sql = `
+    UPDATE Bookings
+    SET member_id = ?, class_id = ?, booking_date = ?
+    WHERE booking_id = ?
+  `;
+ 
+  console.log("Attempting to execute query: " + sql);
+ 
+  const stmt = db.prepare(sql);
+ 
+  const result = stmt.run(member_id, class_id, booking_date, booking_id);
+ 
+  return result.changes;
+}
+ 
+/**
+ * Deletes a booking from the database.
+ *
+ * @param {number} booking_id - The ID of the booking to delete
+ * @returns {number} Number of rows affected (0 means no booking with that ID was found)
+ * @author Nathan McDonald
+ */
+function deleteBooking(booking_id) {
+  const sql = `DELETE FROM Bookings WHERE booking_id = ?`;
+ 
+  console.log("Attempting to execute query: " + sql);
+ 
+  const stmt = db.prepare(sql);
+ 
+  const result = stmt.run(booking_id);
+ 
+  return result.changes;
+}
+
 ////////////////////
 
 // Export modules, this is CommonJS syntax (package.json shows type: commonjs).
@@ -265,9 +454,19 @@ module.exports = {
   createMember,
   readMember,
   readAllMembers,
+  updateMember,
+  deleteMember,
   createMembership,
   readAllMemberships,
+  updateMembership,
+  deleteMembership,
   readAllInstructors,
+  updateInstructor,
+  deleteInstructor,
   readAllClasses,
+  updateClass,
+  deleteClass,
   readAllBookings,
+  updateBooking,
+  deleteBooking,
 };
