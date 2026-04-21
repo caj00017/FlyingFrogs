@@ -321,6 +321,44 @@ function deleteInstructor(instructor_id) {
 ///////////////////////
 
 ///// CLASSES /////
+/**
+ * Inserts a new class ang assigns it to an instructor
+ * num_members is omitted intentionally 
+ * it should be incremented separately as bookings are made
+ * 
+ * @param {string} class_name name of class
+ * @param {number} instructor_id instructor teaching
+ * @param {string} date_time scheduled date and time
+ * @returns {number} auto gen class_id of the new row
+ */
+function createClass(class_name, instructor_id, date_time){
+  const sql = `
+  INSERT INTO Classes (class_name, instructor_id, date_time)
+  VALUES (?, ?, ?)
+  `;
+
+  console.log("Attempting to execute query: " + sql);
+
+  const stmt = db.prepare(sql);
+  const result = stmt.run(class_name, instructor_id, date_time);
+
+  return result.lastInsertRowid;
+}
+
+/**
+ * retrieves a signle class by its primary key
+ * 
+ * @param {number} class_id id of the class to look up
+ * @returns {Object|undefined} the matching class row, or undefiend if not found
+ */
+function readClass(class_id){
+  const sql = `SELECT * FROM Classes WHERE class_id = ?`;
+
+  console.log("Attempting to execute query: " + sql);
+
+  const stmt = db.prepare(sql);
+  return stmt.get(class_id);
+}
 
 /**
  * Retrieve all classes from the classes table
@@ -510,6 +548,8 @@ module.exports = {
   readAllInstructors,
   updateInstructor,
   deleteInstructor,
+  createClass,
+  readClass,
   readAllClasses,
   updateClass,
   deleteClass,
