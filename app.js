@@ -12,7 +12,7 @@ app.use(express.static('public'));
 
 // render home page
 app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/public/index.html');
+  res.sendFile(__dirname + '/public/login.html');
 });
 
 ///// API ROUTES /////
