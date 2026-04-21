@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flying Frogs - Staff Dashboard</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <nav class="navbar">
+    <a href="/" class="brand">Flying Frogs</a>
+    <div class="nav-right">
+      <span class="user-name" id="user-name"></span>
+      <button class="btn btn-secondary btn-sm" id="logout-btn">Log Out</button>
+    </div>
+  </nav>
+
+  <main class="dashboard">
+    <h2>Staff Dashboard</h2>
+    <p class="welcome-text" id="welcome-text"></p>
+
+    <!-- Member Search & Management -->
+    <div class="section">
+      <div class="section-header">
+        <h3>Members</h3>
+      </div>
+      <div class="search-bar">
+        <input type="text" id="member-search" placeholder="Search by name or email...">
+        <button class="btn btn-primary btn-sm" id="search-btn">Search</button>
+        <button class="btn btn-secondary btn-sm" id="show-all-btn">Show All</button>
+      </div>
+      <div class="table-wrapper">
+        <table id="members-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Phone</th>
+              <th>DOB</th>
+              <th>Membership</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+        <div class="empty-state" id="members-empty" style="display:none">
+          No members found.
+        </div>
+      </div>
+    </div>
+
+    <!-- Class Management -->
+    <div class="section">
+      <div class="section-header">
+        <h3>Classes</h3>
+        <button class="btn btn-primary btn-sm" id="new-class-btn">+ Create Class</button>
+      </div>
+      <div class="table-wrapper">
+        <table id="classes-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Class Name</th>
+              <th>Instructor</th>
+              <th>Date & Time</th>
+              <th>Enrolled</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+        <div class="empty-state" id="classes-empty" style="display:none">
+          No classes yet. Create one to get started.
+        </div>
+      </div>
+    </div>
+
+    <!-- All Memberships -->
+    <div class="section">
+      <div class="section-header">
+        <h3>All Memberships</h3>
+        <button class="btn btn-warning btn-sm" id="new-staff-membership-btn">Edit Memberships</button>
+      </div>
+      <div class="table-wrapper">
+        <table id="memberships-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Member ID</th>
+              <th>Plan</th>
+              <th>Type</th>
+              <th>Price</th>
+              <th>Start</th>
+              <th>Expires</th>
+              <th>Status</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+        <div class="empty-state" id="memberships-empty" style="display:none">
+          No memberships found.
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Create Class Modal -->
+  <div class="modal-overlay" id="class-modal">
+    <div class="modal">
+      <h3>Create New Class</h3>
+      <form id="class-form">
+        <div class="form-group">
+          <label for="class-name">Class Name</label>
+          <input type="text" id="class-name" required placeholder="e.g. Morning Yoga">
+        </div>
+        <div class="form-group">
+          <label for="class-datetime">Date & Time</label>
+          <input type="datetime-local" id="class-datetime" required>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" id="cancel-class">Cancel</button>
+          <button type="submit" class="btn btn-primary">Create Class</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Create Membership Modal -->
+  <div class="modal-overlay" id="staff-membership-modal">
+    <div class="modal">
+      <h3>Create Membership for Member</h3>
+      <form id="staff-membership-form">
+        <div class="form-group">
+          <label for="staff-mem-member-id">Member ID</label>
+          <input type="number" id="staff-mem-member-id" required placeholder="e.g. 1">
+        </div>
+        <div class="form-group">
+          <label for="staff-mem-name">Plan Name</label>
+          <select id="staff-mem-name" required>
+            <option value="Basic Plan">Basic Plan</option>
+            <option value="Standard Plan">Standard Plan</option>
+            <option value="Premium Plan">Premium Plan</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="staff-mem-type">Duration</label>
+          <select id="staff-mem-type" required>
+            <option value="monthly">Monthly</option>
+            <option value="quarterly">Quarterly</option>
+            <option value="annual">Annual</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="staff-mem-start">Start Date</label>
+            <input type="date" id="staff-mem-start" required>
+          </div>
+          <div class="form-group">
+            <label for="staff-mem-expire">End Date</label>
+            <input type="date" id="staff-mem-expire" required>
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" id="cancel-staff-membership">Cancel</button>
+          <button type="submit" class="btn btn-primary">Create Membership</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Edit Membership Modal -->
+  <div class="modal-overlay" id="edit-membership-modal">
+    <div class="modal">
+      <h3>Edit Membership</h3>
+      <form id="edit-membership-form">
+        <input type="hidden" id="edit-mem-id">
+        <div class="form-group">
+          <label for="edit-mem-member-id">Member ID</label>
+          <input type="number" id="edit-mem-member-id" required>
+        </div>
+        <div class="form-group">
+          <label for="edit-mem-name">Plan Name</label>
+          <select id="edit-mem-name" required>
+            <option value="Basic Plan">Basic Plan</option>
+            <option value="Standard Plan">Standard Plan</option>
+            <option value="Premium Plan">Premium Plan</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="edit-mem-type">Duration</label>
+          <select id="edit-mem-type" required>
+            <option value="monthly">Monthly</option>
+            <option value="quarterly">Quarterly</option>
+            <option value="annual">Annual</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="edit-mem-start">Start Date</label>
+            <input type="date" id="edit-mem-start" required>
+          </div>
+          <div class="form-group">
+            <label for="edit-mem-expire">End Date</label>
+            <input type="date" id="edit-mem-expire" required>
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" id="cancel-edit-membership">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="/js/staff.js"></script>
+</body>
+</html>

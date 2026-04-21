@@ -1,10 +1,108 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <title>Flying Frogs</title>
-    </head>
-    <body>
-        <h1>Welcome to Flying Frogs</h1>
-        <p>This app is a work in progress, come back later to see what's new!</p>
-    </body>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flying Frogs - Login</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <div class="auth-wrapper">
+    <div class="auth-card">
+      <h1>Flying Frogs</h1>
+      <p class="subtitle">Gym Management Portal</p>
+
+      <div class="alert alert-error" id="error-alert"></div>
+
+      <!-- LOGIN FORM -->
+      <form id="login-form">
+        <div class="tabs" style="margin-bottom:1rem">
+          <button type="button" class="tab-btn active" data-role="member">Member</button>
+          <button type="button" class="tab-btn" data-role="instructor">Staff</button>
+        </div>
+        <input type="hidden" id="login-role" value="member">
+
+        <div class="form-group">
+          <label for="login-email">Email</label>
+          <input type="email" id="login-email" required placeholder="you@example.com">
+        </div>
+        <div class="form-group">
+          <label for="login-password">Password</label>
+          <input type="password" id="login-password" required placeholder="Your password">
+        </div>
+        <button type="submit" class="btn btn-primary form-submit">Log In</button>
+        <p class="form-footer">Don't have an account? <a id="switch-to-signup">Sign up</a></p>
+      </form>
+
+      <!-- SIGNUP FORM -->
+      <form id="signup-form" style="display:none">
+        <div class="tabs" style="margin-bottom:1rem">
+          <button type="button" class="tab-btn active" data-role="member">Member</button>
+          <button type="button" class="tab-btn" data-role="instructor">Staff</button>
+        </div>
+        <input type="hidden" id="signup-role" value="member">
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="signup-first">First Name</label>
+            <input type="text" id="signup-first" required>
+          </div>
+          <div class="form-group">
+            <label for="signup-last">Last Name</label>
+            <input type="text" id="signup-last" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="signup-email">Email</label>
+          <input type="email" id="signup-email" required placeholder="you@example.com">
+        </div>
+        <div class="form-group">
+          <label for="signup-phone">Phone</label>
+          <input type="tel" id="signup-phone" required placeholder="5551234567">
+        </div>
+        <div class="form-group" id="dob-group">
+          <label for="signup-dob">Date of Birth</label>
+          <input type="date" id="signup-dob" required>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="signup-password">Password</label>
+            <input type="password" id="signup-password" required minlength="6">
+          </div>
+          <div class="form-group">
+            <label for="signup-confirm">Confirm Password</label>
+            <input type="password" id="signup-confirm" required minlength="6">
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary form-submit">Create Account</button>
+        <p class="form-footer">Already have an account? <a id="switch-to-login">Log in</a></p>
+      </form>
+    </div>
+  </div>
+  <script>
+    const loginForm = document.getElementById('login-form');
+    const signupForm = document.getElementById('signup-form');
+
+    document.getElementById('switch-to-signup').addEventListener('click', () => {
+      loginForm.style.display = 'none';
+      signupForm.style.display = 'block';
+    });
+
+    document.getElementById('switch-to-login').addEventListener('click', () => {
+      loginForm.style.display = 'block';
+      signupForm.style.display = 'none';
+    });
+
+    // Role tab switching (member <-> staff) on both forms
+    document.querySelectorAll('#login-form .tabs .tab-btn, #signup-form .tabs .tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        btn.parentElement.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        if (btn.closest('#signup-form') && document.getElementById('dob-group')) {
+          document.getElementById('dob-group').style.display = btn.dataset.role === 'instructor' ? 'none' : 'block';
+        }
+      });
+    });
+  </script>
+</body>
 </html>

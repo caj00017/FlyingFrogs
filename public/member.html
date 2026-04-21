@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flying Frogs - Member Dashboard</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <nav class="navbar">
+    <a href="/" class="brand">Flying Frogs</a>
+    <div class="nav-right">
+      <span class="user-name" id="user-name"></span>
+      <button class="btn btn-secondary btn-sm" id="logout-btn">Log Out</button>
+    </div>
+  </nav>
+
+  <main class="dashboard">
+    <h2>Member Dashboard</h2>
+    <p class="welcome-text" id="welcome-text"></p>
+
+    <!-- My Memberships -->
+    <div class="section">
+      <div class="section-header">
+        <h3>My Memberships</h3>
+      </div>
+      <div class="table-wrapper">
+        <table id="memberships-table">
+          <thead>
+            <tr>
+              <th>Plan</th>
+              <th>Type</th>
+              <th>Price</th>
+              <th>Start Date</th>
+              <th>Expires</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+        <div class="empty-state" id="memberships-empty" style="display:none">
+          You don't have any memberships yet. Contact staff to get set up.
+        </div>
+      </div>
+    </div>
+
+    <!-- Available Classes -->
+    <div class="section">
+      <div class="section-header">
+        <h3>Available Classes</h3>
+        <button class="btn btn-primary btn-sm" id="book-now-btn">Book Now</button>
+      </div>
+      <div class="table-wrapper">
+        <table id="classes-table">
+          <thead>
+            <tr>
+              <th>Class</th>
+              <th>Instructor</th>
+              <th>Date & Time</th>
+              <th>Enrolled</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+        <div class="empty-state" id="classes-empty" style="display:none">
+          No classes are currently available.
+        </div>
+      </div>
+    </div>
+
+    <!-- My Bookings -->
+    <div class="section">
+      <div class="section-header">
+        <h3>My Bookings</h3>
+      </div>
+      <div class="table-wrapper">
+        <table id="bookings-table">
+          <thead>
+            <tr>
+              <th>Class</th>
+              <th>Instructor</th>
+              <th>Class Date</th>
+              <th>Booked At</th>
+              <th>Status</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+        <div class="empty-state" id="bookings-empty" style="display:none">
+          You haven't booked any classes yet.
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Book Class Modal -->
+  <div class="modal-overlay" id="booking-modal">
+    <div class="modal">
+      <h3>Book a Class</h3>
+      <form id="booking-form">
+        <div class="form-group">
+          <label for="booking-class">Select a Class</label>
+          <select id="booking-class" required>
+            <option value="" disabled selected>Loading classes...</option>
+          </select>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" id="cancel-booking">Cancel</button>
+          <button type="submit" class="btn btn-primary">Confirm Booking</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="/js/member.js"></script>
+</body>
+</html>
