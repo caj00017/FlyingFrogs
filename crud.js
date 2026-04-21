@@ -218,17 +218,17 @@ function deleteMembership(membership_id) {
 
 ///// INSTRUCTORS /////
 
-function createInstructor(instructor_id, first_name, last_name, email, phone, dob, status) {
+function createInstructor(instructor_id, first_name, last_name, email, phone, status) {
   // prepare query to create an instructor based on the given values
-  const sql = `INSERT INTO Instructors (instructor_id, first_name, last_name, email, phone, dob, status)
-  VALUES (?, ?, ?, ?, ?, ?, ?)`;
+  const sql = `INSERT INTO Instructors (instructor_id, first_name, last_name, email, phone, status)
+  VALUES (?, ?, ?, ?, ?, ?)`;
 
   // notify query execution and compile the query
   console.log("Preparing to execute query: " + sql);
   const stmt = db.prepare(sql);
 
   // execute the query
-  const result = stmt.run(instructor_id, first_name, last_name, email, phone, dob, status); 
+  const result = stmt.run(instructor_id, first_name, last_name, email, phone, status); 
 
   // return the result of the query execution
   return result.lastInsertRowid;
@@ -240,7 +240,7 @@ function createInstructor(instructor_id, first_name, last_name, email, phone, do
  */
 function readInstructor(instructor_id) {
   // prepare query to select a specific Instructor based on their id
-  const sql = "SELECT * FROM Instructor WHERE instructor_id = ?"
+  const sql = "SELECT * FROM Instructors WHERE instructor_id = ?"
 
   // notify query execution and compile query
   console.log("Attempting to execute query: " + sql);
@@ -273,20 +273,19 @@ function readAllInstructors() {
 
 /**
  * Updates an existing instructor record.
- * Note: update this function's params to match your actual Instructors table columns.
  *
  * @param {number} instructor_id - The ID of the instructor to update
  * @param {string} first_name - Updated first name
  * @param {string} last_name - Updated last name
  * @param {string} email - Updated email address
  * @param {string} phone - Updated phone number
+ * @param {string} status - Updated status (active, on_leave, inactive)
  * @returns {number} Number of rows affected (0 means no instructor with that ID was found)
- * @author Nathan McDonald
  */
-function updateInstructor(instructor_id, first_name, last_name, email, phone) {
+function updateInstructor(instructor_id, first_name, last_name, email, phone, status) {
   const sql = `
     UPDATE Instructors
-    SET first_name = ?, last_name = ?, email = ?, phone = ?
+    SET first_name = ?, last_name = ?, email = ?, phone = ?, status = ?
     WHERE instructor_id = ?
   `;
  
@@ -294,7 +293,7 @@ function updateInstructor(instructor_id, first_name, last_name, email, phone) {
  
   const stmt = db.prepare(sql);
  
-  const result = stmt.run(first_name, last_name, email, phone, instructor_id);
+  const result = stmt.run(first_name, last_name, email, phone, status, instructor_id);
  
   return result.changes;
 }
@@ -304,7 +303,6 @@ function updateInstructor(instructor_id, first_name, last_name, email, phone) {
  *
  * @param {number} instructor_id - The ID of the instructor to delete
  * @returns {number} Number of rows affected (0 means no instructor with that ID was found)
- * @author Nathan McDonald
  */
 function deleteInstructor(instructor_id) {
   const sql = `DELETE FROM Instructors WHERE instructor_id = ?`;
@@ -542,9 +540,12 @@ module.exports = {
   updateMember,
   deleteMember,
   createMembership,
+  readMembership,
   readAllMemberships,
   updateMembership,
   deleteMembership,
+  createInstructor,    
+  readInstructor,       
   readAllInstructors,
   updateInstructor,
   deleteInstructor,
@@ -553,6 +554,8 @@ module.exports = {
   readAllClasses,
   updateClass,
   deleteClass,
+  createBooking,
+  readBooking,
   readAllBookings,
   updateBooking,
   deleteBooking,
