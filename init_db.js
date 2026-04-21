@@ -74,6 +74,7 @@ function createInstructorsTable() {
         last_name VARCHAR NOT NULL,
         email VARCHAR NOT NULL UNIQUE,
         phone INTEGER NOT NULL,
+        dob VARCHAR NOT NULL,
         status TEXT NOT NULL DEFAULT 'active'
             CHECK (status IN ('active', 'on_leave', 'inactive'))
         );
