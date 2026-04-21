@@ -273,19 +273,20 @@ function readAllInstructors() {
 
 /**
  * Updates an existing instructor record.
+ * Note: update this function's params to match your actual Instructors table columns.
  *
  * @param {number} instructor_id - The ID of the instructor to update
  * @param {string} first_name - Updated first name
  * @param {string} last_name - Updated last name
  * @param {string} email - Updated email address
  * @param {string} phone - Updated phone number
- * @param {string} status - Updated status (active, on_leave, inactive)
  * @returns {number} Number of rows affected (0 means no instructor with that ID was found)
+ * @author Nathan McDonald
  */
-function updateInstructor(instructor_id, first_name, last_name, email, phone, status) {
+function updateInstructor(instructor_id, first_name, last_name, email, phone) {
   const sql = `
     UPDATE Instructors
-    SET first_name = ?, last_name = ?, email = ?, phone = ?, status = ?
+    SET first_name = ?, last_name = ?, email = ?, phone = ?
     WHERE instructor_id = ?
   `;
  
@@ -293,7 +294,7 @@ function updateInstructor(instructor_id, first_name, last_name, email, phone, st
  
   const stmt = db.prepare(sql);
  
-  const result = stmt.run(first_name, last_name, email, phone, status, instructor_id);
+  const result = stmt.run(first_name, last_name, email, phone, instructor_id);
  
   return result.changes;
 }
@@ -303,6 +304,7 @@ function updateInstructor(instructor_id, first_name, last_name, email, phone, st
  *
  * @param {number} instructor_id - The ID of the instructor to delete
  * @returns {number} Number of rows affected (0 means no instructor with that ID was found)
+ * @author Nathan McDonald
  */
 function deleteInstructor(instructor_id) {
   const sql = `DELETE FROM Instructors WHERE instructor_id = ?`;

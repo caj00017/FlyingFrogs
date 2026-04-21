@@ -2,6 +2,7 @@
 // Authors: Chris Jones
 // Version: April 14 2026
 
+// testing testing 1.. 2... 3
 const express = require('express');
 
 const { 
@@ -15,27 +16,24 @@ const {
 const app = express();
 const port = 3000;
 
-// Middleware
 app.use(express.static('public'));
-app.use(express.json()); // This is CRITICAL - parses JSON request bodies
 
 // render home page
 app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/public/login.html');
+  res.sendFile(__dirname + '/public/index.html');
 });
 
 ///// API ROUTES /////
 
-// ============ MEMBERS ============
-// GET all members
+// get Members
 app.get('/api/members', (req, res) => {
-  try {
-    const members = readAllMembers();
-    res.json(members);
-  } catch (error) {
-    console.error('Error fetching members:', error);
-    res.status(500).json({ error: error.message });
-  }
+
+  // get all members from crud.readAllMembers()
+  const members = readAllMembers();
+
+  // output members in a json format
+  res.json(members);
+
 });
 
 // get Member by ID
@@ -49,13 +47,13 @@ app.get('/api/members/:id', (req,res) => {
 
 // get Memberships
 app.get('/api/memberships', (req, res) => {
-  try {
-    const memberships = readAllMemberships();
-    res.json(memberships);
-  } catch (error) {
-    console.error('Error fetching memberships:', error);
-    res.status(500).json({ error: error.message });
-  }
+
+  // get all members from crud.readAllMemberships()
+  const memberships = readAllMemberships();
+
+  // output Memberships in a json format
+  res.json(memberships);
+
 });
 
 // get Membership by ID
@@ -69,13 +67,13 @@ app.get('/api/memberships/:id', (req,res) => {
 
 // get Instructors
 app.get('/api/instructors', (req, res) => {
-  try {
-    const instructors = readAllInstructors();
-    res.json(instructors);
-  } catch (error) {
-    console.error('Error fetching instructors:', error);
-    res.status(500).json({ error: error.message });
-  }
+
+  // get all Instructors from crud.readAllInstructors()
+  const instructors = readAllInstructors();
+
+  // output Instructors in a json format
+  res.json(instructors);
+
 });
 
 // get Instructor by ID
@@ -89,13 +87,13 @@ app.get('/api/instructors/:id', (req,res) => {
 
 // get Classes
 app.get('/api/classes', (req, res) => {
-  try {
-    const classes = readAllClasses();
-    res.json(classes);
-  } catch (error) {
-    console.error('Error fetching classes:', error);
-    res.status(500).json({ error: error.message });
-  }
+
+  // get all Instructors from crud.readAllClasses()
+  const classes = readAllClasses();
+
+  // output Classes in a json format
+  res.json(classes);
+
 });
 
 // get class by ID
@@ -110,13 +108,13 @@ app.get('/api/classes/:id', (req,res) => {
 
 // get Bookings
 app.get('/api/bookings', (req, res) => {
-  try {
-    const bookings = readAllBookings();
-    res.json(bookings);
-  } catch (error) {
-    console.error('Error fetching bookings:', error);
-    res.status(500).json({ error: error.message });
-  }
+
+  // get all Instructors from crud.readAllBookings()
+  const bookings = readAllBookings();
+
+  // output Bookings in a json format
+  res.json(bookings);
+
 });
 
 // get booking by ID
@@ -133,5 +131,4 @@ app.get('/api/bookings/:id', (req,res) => {
 // Start server listening
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
-  console.log(`Visit http://localhost:${port}`);
 });
