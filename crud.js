@@ -13,14 +13,13 @@ const db = new Database('source.db');
 
 /**
  * holy shit vs code auto adds the params in nodejs. That's fucking awesome
- * @param {*} id - Auto generated member_id of the new row (At least I think they're auto gen'd)
  * @param {*} first_name - members first name
  * @param {*} last_name members last name
  * @param {*} email members email address (must be unique)
  * @param {*} phone memebrs phone number
  * @param {*} dob memebers date of birth (YYY-MM-DD)
  */
-function createMember(id, first_name, last_name, email, phone, dob) {
+function createMember(first_name, last_name, email, phone, dob) {
   let sql = `
   INSERT INTO Members (first_name, last_name, email, phone, dob)
   VALUES (?, ?, ?, ?, ?)
@@ -134,7 +133,7 @@ function createMembership(member_id, name, price, type, start_date, expire_date)
 
   const stmt = db.prepare(sql);
 
-  const result = stmt.run(name, price, type, start_date, expire_date);
+  const result = stmt.run(member_id, name, price, type, start_date, expire_date);
   return result.lastInsertRowid;
 }
 

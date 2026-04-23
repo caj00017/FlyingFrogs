@@ -28,6 +28,18 @@ app.get('/', (req, res) => {
 
 ///// MEMBERS /////
 
+// POST endpoint for creating new members
+app.post('/api/members', (req,res) => {
+  // get params from request body
+  const {first_name, last_name, email, phone, dob} = req.body;
+
+  // pass params to create function
+  const result = createMember(first_name, last_name, email, phone, dob);
+
+  // return the result of query execution
+  res.json(result);
+})
+
 // get Members
 app.get('/api/members', (req, res) => {
 
@@ -66,6 +78,18 @@ app.put('/api/members/:id', (req,res) => {
 ///////////////////
 
 ///// MEMBERSHIPS /////
+
+// POST endpoint for creating new memberships
+app.post('/api/memberships', (req,res) => {
+  // get params from request body
+  const {member_id, name, price, type, start_date, expire_date} = req.body;
+
+  // pass params to create function
+  const result = createMembership(member_id, name, price, type, start_date, expire_date);
+
+  // return the result of query execution
+  res.json(result);
+})
 
 // get Memberships
 app.get('/api/memberships', (req, res) => {
@@ -106,6 +130,18 @@ app.put('/api/memberships/:id', (req,res) => {
 
 ///// INSTRUCTORS /////
 
+// POST endpoint for creating new instructors
+app.post('/api/instructors', (req,res) => {
+  // get params from request body
+  const {first_name, last_name, email, phone, dob, status} = req.body;
+
+  // pass params to create function
+  const result = createInstructor(first_name, last_name, email, phone, dob, status);
+
+  // return the result of query execution
+  res.json(result);
+})
+
 // get Instructors
 app.get('/api/instructors', (req, res) => {
 
@@ -144,6 +180,18 @@ app.put('/api/instructors/:id', (req,res) => {
 ///////////////////////
 
 ///// CLASSES /////
+
+// POST endpoint for creating new classes
+app.post('/api/classes', (req,res) => {
+  // get params from request body
+  const {class_name, instructor_id, date_time} = req.body;
+
+  // pass params to create function
+  const result = createClass(class_name, instructor_id, date_time);
+
+  // return the result of query execution
+  res.json(result);
+})
 
 // get Classes
 app.get('/api/classes', (req, res) => {
@@ -184,6 +232,18 @@ app.put('/api/classes/:id', (req,res) => {
 ///////////////////
 
 ///// BOOKINGS /////
+
+// POST endpoint for creating new bookings
+app.post('/api/bookings', (req,res) => {
+  // get params from request body
+  const {member_id, class_id, booking_time, cancellation_time, status} = req.body;
+
+  // pass params to create function
+  const result = createBooking(member_id, class_id, booking_time, cancellation_time, status);
+
+  // return the result of query execution
+  res.json(result);
+})
 
 // get Bookings
 app.get('/api/bookings', (req, res) => {
