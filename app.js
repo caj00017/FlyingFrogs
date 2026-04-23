@@ -17,6 +17,7 @@ const app = express();
 const port = 3000;
 
 app.use(express.static('public'));
+app.use(express.json());
 
 // render home page
 app.get('/', (req, res) => {
@@ -24,6 +25,8 @@ app.get('/', (req, res) => {
 });
 
 ///// API ROUTES /////
+
+///// MEMBERS /////
 
 // get Members
 app.get('/api/members', (req, res) => {
@@ -45,6 +48,25 @@ app.get('/api/members/:id', (req,res) => {
   res.json(member);
 })
 
+// PUT endpoint for updating Members
+app.put('/api/members/:id', (req,res) => {
+
+  // get id and parameters from PUT request
+  const id = req.params.id;
+  const {first_name, last_name, email, phone, dob} = req.body;
+
+  // pass params to updateMember()
+  const result = updateMember(id, first_name, last_name, email, phone, dob);
+
+  // return the result 
+  res.json(result);
+
+})
+
+///////////////////
+
+///// MEMBERSHIPS /////
+
 // get Memberships
 app.get('/api/memberships', (req, res) => {
 
@@ -65,6 +87,25 @@ app.get('/api/memberships/:id', (req,res) => {
   res.json(membership);
 })
 
+// PUT endpoint for updating Memberships
+app.put('/api/memberships/:id', (req,res) => {
+
+  // get id and parameters from PUT request
+  const id = req.params.id;
+  const {member_id, name, price, type, start_date, expire_date} = req.body;
+
+  // pass params to update function
+  const result = updateMembership(id, member_id, name, price, type, start_date, expire_date);
+
+  // return the result 
+  res.json(result);
+
+})
+
+///////////////////////
+
+///// INSTRUCTORS /////
+
 // get Instructors
 app.get('/api/instructors', (req, res) => {
 
@@ -84,6 +125,25 @@ app.get('/api/instructors/:id', (req,res) => {
   // output that instructor's data in json format
   res.json(instructor);
 })
+
+// PUT endpoint for updating Instructors
+app.put('/api/instructors/:id', (req,res) => {
+
+  // get id and parameters from PUT request
+  const id = req.params.id;
+  const {first_name, last_name, email, phone} = req.body;
+
+  // pass params to update function
+  const result = updateInstructor(id, first_name, last_name, email, phone);
+
+  // return the result 
+  res.json(result);
+
+})
+
+///////////////////////
+
+///// CLASSES /////
 
 // get Classes
 app.get('/api/classes', (req, res) => {
@@ -106,6 +166,25 @@ app.get('/api/classes/:id', (req,res) => {
   res.json(classObject);
 })
 
+// PUT endpoint for updating Classes
+app.put('/api/classes/:id', (req,res) => {
+
+  // get id and parameters from PUT request
+  const id = req.params.id;
+  const {instructor_id, name, schedule, capacity} = req.body;
+
+  // pass params to update function
+  const result = updateClass(id, instructor_id, name, schedule, capacity);
+
+  // return the result 
+  res.json(result);
+
+})
+
+///////////////////
+
+///// BOOKINGS /////
+
 // get Bookings
 app.get('/api/bookings', (req, res) => {
 
@@ -125,6 +204,23 @@ app.get('/api/bookings/:id', (req,res) => {
   // output that booking's data in json format
   res.json(booking);
 })
+
+// PUT endpoint for updating Bookings
+app.put('/api/bookings/:id', (req,res) => {
+
+  // get id and parameters from PUT request
+  const id = req.params.id;
+  const {member_id, class_id, booking_date} = req.body;
+
+  // pass params to update function
+  const result = updateBooking(id, member_id, class_id, booking_date);
+
+  // return the result 
+  res.json(result);
+
+})
+
+////////////////////
 
 //////////////////////
 

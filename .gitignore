@@ -1,3 +1,4 @@
 node_modules
 source.db
 test.js
+*.sh

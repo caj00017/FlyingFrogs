@@ -82,13 +82,13 @@ function updateMember(id, first_name, last_name, email, phone, dob){
    const sql = `
     UPDATE Members
     SET first_name = ?, last_name = ?, email = ?, phone = ?, dob = ?
-    WHERE id = ?
+    WHERE member_id = ?
   `;
   console.log("Attempting to executre query: " + sql);
 
   const stmt = db.prepare(sql);
 
-  const result = stmt.run(id, first_name, last_name, email, phone, dob);
+  const result = stmt.run(first_name, last_name, email, phone, dob, id);
   return result.lastInsertRowid;
 
 }
@@ -396,7 +396,7 @@ function readAllClasses() {
 function updateClass(class_id, instructor_id, name, schedule, capacity) {
   const sql = `
     UPDATE Classes
-    SET instructor_id = ?, name = ?, schedule = ?, capacity = ?
+    SET instructor_id = ?, class_name = ?, date_time = ?, num_members = ?
     WHERE class_id = ?
   `;
  
@@ -498,7 +498,7 @@ function readAllBookings() {
 function updateBooking(booking_id, member_id, class_id, booking_date) {
   const sql = `
     UPDATE Bookings
-    SET member_id = ?, class_id = ?, booking_date = ?
+    SET member_id = ?, class_id = ?, booking_time = ?
     WHERE booking_id = ?
   `;
  
