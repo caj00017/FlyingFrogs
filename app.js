@@ -24,6 +24,21 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + '/public/index.html');
 });
 
+// render login page
+app.get('/login', (req, res) => {
+  res.sendFile(__dirname + '/public/login.html');
+});
+
+// render member
+app.get('/me', (req, res) => {
+  res.sendFile(__dirname + '/public/member.html');
+});
+
+// render staff page
+app.get('/staff', (req, res) => {
+  res.sendFile(__dirname + '/public/staff.html');
+});
+
 ///// API ROUTES /////
 
 ///// MEMBERS /////
