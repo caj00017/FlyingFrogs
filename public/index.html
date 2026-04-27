@@ -1,10 +1,167 @@
+<!-- public/index.html -->
 <!DOCTYPE html>
-<html>
-    <head>
-        <title>Flying Frogs</title>
-    </head>
-    <body>
-        <h1>Welcome to Flying Frogs</h1>
-        <p>This app is a work in progress, come back later to see what's new!</p>
-    </body>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flying Frogs - Fitness Management System</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🐸 Flying Frogs</h1>
+            <p>Fitness Management System</p>
+        </header>
+
+        <nav class="tabs">
+            <button class="tab-btn active" data-tab="members">Members</button>
+            <button class="tab-btn" data-tab="memberships">Memberships</button>
+            <button class="tab-btn" data-tab="instructors">Instructors</button>
+            <button class="tab-btn" data-tab="classes">Classes</button>
+            <button class="tab-btn" data-tab="bookings">Bookings</button>
+        </nav>
+
+        <main>
+            <!-- Members Tab -->
+            <div id="members" class="tab-content active">
+                <div class="section-header">
+                    <h2>Members</h2>
+                    <button class="btn btn-primary" onclick="showAddMemberModal()">+ Add Member</button>
+                </div>
+                <div class="table-container">
+                    <table id="members-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>First Name</th>
+                                <th>Last Name</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Date of Birth</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="members-tbody">
+                            <tr><td colspan="7">Loading...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Memberships Tab -->
+            <div id="memberships" class="tab-content">
+                <div class="section-header">
+                    <h2>Memberships</h2>
+                    <button class="btn btn-primary" onclick="showAddMembershipModal()">+ Add Membership</button>
+                </div>
+                <div class="table-container">
+                    <table id="memberships-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Member ID</th>
+                                <th>Name</th>
+                                <th>Price</th>
+                                <th>Type</th>
+                                <th>Start Date</th>
+                                <th>Expire Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="memberships-tbody">
+                            <tr><td colspan="8">Loading...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Instructors Tab -->
+            <div id="instructors" class="tab-content">
+                <div class="section-header">
+                    <h2>Instructors</h2>
+                    <button class="btn btn-primary" onclick="showAddInstructorModal()">+ Add Instructor</button>
+                </div>
+                <div class="table-container">
+                    <table id="instructors-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>First Name</th>
+                                <th>Last Name</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="instructors-tbody">
+                            <tr><td colspan="7">Loading...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Classes Tab -->
+            <div id="classes" class="tab-content">
+                <div class="section-header">
+                    <h2>Classes</h2>
+                    <button class="btn btn-primary" onclick="showAddClassModal()">+ Add Class</button>
+                </div>
+                <div class="table-container">
+                    <table id="classes-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Class Name</th>
+                                <th>Instructor ID</th>
+                                <th>Date & Time</th>
+                                <th>Members</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="classes-tbody">
+                            <tr><td colspan="6">Loading...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Bookings Tab -->
+            <div id="bookings" class="tab-content">
+                <div class="section-header">
+                    <h2>Bookings</h2>
+                    <button class="btn btn-primary" onclick="showAddBookingModal()">+ Add Booking</button>
+                </div>
+                <div class="table-container">
+                    <table id="bookings-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Member ID</th>
+                                <th>Class ID</th>
+                                <th>Booking Time</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="bookings-tbody">
+                            <tr><td colspan="6">Loading...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal for Add/Edit Forms -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div id="modal-body"></div>
+        </div>
+    </div>
+
+    <script src="/script.js"></script>
+</body>
 </html>
