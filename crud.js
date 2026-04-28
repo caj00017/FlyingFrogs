@@ -97,16 +97,34 @@ function updateMember(id, first_name, last_name, email, phone, dob){
  * @author Chris Jones
  */
 function deleteMember(id) {
-  // prepare query to delete a specific member based on their id
-  let sql = "DELETE FROM Members WHERE id = ?";
 
-  // notify query execution and compile query
-  console.log("Attempting to execute query: " + sql);
-  const stmt = db.prepare(sql);
+  // Since memberships and bookings are dependent on their respective member,
+  // we must delete the associated membership and booking first
+  // Without this, we'll get a FOREIGN KEY RESTRAINT error when trying to delete a member.
 
-  // run the query and return the result
-  const result = stmt.run(id);
-  return result.lastInsertRowid;
+  // Delete each of this Member's bookings
+  const deleteBookings = db.prepare("DELETE FROM Bookings WHERE member_id = ?");
+  
+  // delete each of this member's memberships
+  const deleteMemberships = db.prepare("DELETE FROM Memberships WHERE member_id = ?");
+  
+  // delete the member themselves
+  const deleteMemberStmt = db.prepare("DELETE FROM Members WHERE member_id = ?");
+
+  // these 3 deletions should be packaged into a single transaction where the dependents are removed first
+  const transaction = db.transaction((memberId) => {
+
+    // run each of the prepared statements
+    deleteBookings.run(memberId);
+    deleteMemberships.run(memberId);
+    const result = deleteMemberStmt.run(memberId);
+
+    // return the result of member deletion
+    return result.changes;
+  });
+
+  // pass the id to the transaction so it can run each statement and then return the result
+  return transaction(id);
 }
 
 // MEMBERSHIPS
@@ -303,18 +321,37 @@ function updateInstructor(instructor_id, first_name, last_name, email, phone) {
  *
  * @param {number} instructor_id - The ID of the instructor to delete
  * @returns {number} Number of rows affected (0 means no instructor with that ID was found)
- * @author Nathan McDonald
+ * @author Nathan McDonald, Chris Jones
  */
 function deleteInstructor(instructor_id) {
-  const sql = `DELETE FROM Instructors WHERE instructor_id = ?`;
- 
-  console.log("Attempting to execute query: " + sql);
- 
-  const stmt = db.prepare(sql);
- 
-  const result = stmt.run(instructor_id);
- 
-  return result.changes;
+
+  // delete the bookings associated with this instructor
+  const deleteBookings = db.prepare("DELETE FROM Bookings WHERE class_id IN (SELECT class_id FROM Classes WHERE instructor_id = ?)");
+  
+  // delete the classes associated with this instructor
+  const deleteClasses = db.prepare("DELETE FROM Classes WHERE instructor_id = ?");
+  
+  // delete the instructor themself
+  const deleteInstructorStmt = db.prepare("DELETE FROM Instructors WHERE instructor_id = ?");
+
+  // create transaction
+  const transaction = db.transaction((id) => {
+
+    // run bookings deletion statement
+    deleteBookings.run(id);
+
+    // run classes deletion statement
+    deleteClasses.run(id);
+
+    // run instructor deletion statement
+    const result = deleteInstructorStmt.run(id);
+
+    // return the changes 
+    return result.changes;
+  });
+
+  // run the transaction and return the result
+  return transaction(instructor_id);
 }
 
 ///////////////////////
@@ -413,18 +450,24 @@ function updateClass(class_id, instructor_id, name, schedule, capacity) {
  *
  * @param {number} class_id - The ID of the class to delete
  * @returns {number} Number of rows affected (0 means no class with that ID was found)
- * @author Nathan McDonald
+ * @author Nathan McDonald, Chris Jones
  */
 function deleteClass(class_id) {
-  const sql = `DELETE FROM Classes WHERE class_id = ?`;
- 
-  console.log("Attempting to execute query: " + sql);
- 
-  const stmt = db.prepare(sql);
- 
-  const result = stmt.run(class_id);
- 
-  return result.changes;
+
+  const deleteBookings = db.prepare("DELETE FROM Bookings WHERE class_id = ?");
+  const deleteClassStmt = db.prepare("DELETE FROM Classes WHERE class_id = ?");
+
+  const transaction = db.transaction((classId) => {
+    // run each of the prepared statements
+    deleteBookings.run(classId);
+    const result = deleteClassStmt.run(classId);
+
+    // return the result of class deletion
+    return result.changes;
+  });
+
+  // pass the id to the transaction so it can run each statement and then return the result
+  return transaction(class_id);
 }
 
 ///////////////////

@@ -90,6 +90,18 @@ app.put('/api/members/:id', (req,res) => {
 
 })
 
+// delete endpoint for deleting members by ID
+app.delete('/api/members/:id', (req,res) => {
+  // get id from DELETE request
+  const id = parseInt(req.params.id);
+
+  // delete member and grab the result
+  const result = deleteMember(id);
+
+  // return the result of query execution
+  res.json(result);
+})
+
 ///////////////////
 
 ///// MEMBERSHIPS /////
@@ -141,6 +153,18 @@ app.put('/api/memberships/:id', (req,res) => {
 
 })
 
+// delete endpoint for deleting memberships by ID
+app.delete('/api/memberships/:id', (req,res) => {
+  // get id from DELETE request
+  const id = parseInt(req.params.id);
+
+  // delete and grab the result
+  const result = deleteMembership(id);
+
+  // return the result of query execution
+  res.json(result);
+})
+
 ///////////////////////
 
 ///// INSTRUCTORS /////
@@ -190,6 +214,18 @@ app.put('/api/instructors/:id', (req,res) => {
   // return the result 
   res.json(result);
 
+})
+
+// delete endpoint for deleting instructors by ID
+app.delete('/api/instructors/:id', (req,res) => {
+  // get id from DELETE request
+  const id = parseInt(req.params.id);
+
+  // delete and grab the result
+  const result = deleteInstructor(id);
+
+  // return the result of query execution
+  res.json(result);
 })
 
 ///////////////////////
@@ -244,6 +280,18 @@ app.put('/api/classes/:id', (req,res) => {
 
 })
 
+// delete endpoint for deleting classes by ID
+app.delete('/api/classes/:id', (req,res) => {
+  // get id from DELETE request
+  const id = parseInt(req.params.id);
+
+  // delete and grab the result
+  const result = deleteClass(id);
+
+  // return the result of query execution
+  res.json(result);
+})
+
 ///////////////////
 
 ///// BOOKINGS /////
@@ -293,6 +341,18 @@ app.put('/api/bookings/:id', (req,res) => {
   // return the result 
   res.json(result);
 
+})
+
+// delete endpoint for deleting bookings by ID
+app.delete('/api/bookings/:id', (req,res) => {
+  // get id from DELETE request
+  const id = parseInt(req.params.id);
+
+  // delete and grab the result
+  const result = deleteBooking(id);
+
+  // return the result of query execution
+  res.json(result);
 })
 
 ////////////////////
