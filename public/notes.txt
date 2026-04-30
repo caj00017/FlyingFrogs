@@ -1,0 +1,18 @@
+Notes for ways to run the website.
+
+Maybe add to the README, later possibly
+
+
+
+To Load without Sample Data (Blank)
+    rm source.db
+    node init_db.js
+    npm start
+
+
+
+To Load with Sample Data
+    rm source.db
+    node init_db.js
+    node sample-data.js
+    npm start

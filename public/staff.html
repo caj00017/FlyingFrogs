@@ -1,3 +1,4 @@
+<!-- public/staff.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,21 +9,22 @@
 </head>
 <body>
   <nav class="navbar">
-    <a href="/" class="brand">Flying Frogs</a>
+    <a href="/" class="brand">🐸 Flying Frogs</a>
     <div class="nav-right">
-      <span class="user-name" id="user-name"></span>
+      <span class="user-name" id="user-name">Staff</span>
       <button class="btn btn-secondary btn-sm" id="logout-btn">Log Out</button>
     </div>
   </nav>
 
   <main class="dashboard">
     <h2>Staff Dashboard</h2>
-    <p class="welcome-text" id="welcome-text"></p>
+    <p class="welcome-text" id="welcome-text">Welcome. Manage members, instructors, classes, and memberships below.</p>
 
-    <!-- Member Search & Management -->
+    <!-- Members Section -->
     <div class="section">
       <div class="section-header">
         <h3>Members</h3>
+        <button class="btn btn-primary btn-sm" id="add-member-btn">+ Add Member</button>
       </div>
       <div class="search-bar">
         <input type="text" id="member-search" placeholder="Search by name or email...">
@@ -38,23 +40,52 @@
               <th>Email</th>
               <th>Phone</th>
               <th>DOB</th>
-              <th>Membership</th>
-              <th></th>
+              <th>Actions</th>
             </tr>
           </thead>
-          <tbody></tbody>
+          <tbody id="members-tbody">
+            <tr><td colspan="6" class="loading">Loading...</td></tr>
+          </tbody>
         </table>
-        <div class="empty-state" id="members-empty" style="display:none">
-          No members found.
-        </div>
       </div>
     </div>
 
-    <!-- Class Management -->
+    <!-- Instructors Section -->
+    <div class="section">
+      <div class="section-header">
+        <h3>Instructors</h3>
+        <button class="btn btn-primary btn-sm" id="add-instructor-btn">+ Add Instructor</button>
+      </div>
+      <div class="search-bar">
+        <input type="text" id="instructor-search" placeholder="Search by name or email...">
+        <button class="btn btn-primary btn-sm" id="instructor-search-btn">Search</button>
+        <button class="btn btn-secondary btn-sm" id="show-all-instructors-btn">Show All</button>
+      </div>
+      <div class="table-wrapper">
+        <table id="instructors-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Phone</th>
+              <th>DOB</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="instructors-tbody">
+            <tr><td colspan="7" class="loading">Loading...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Classes Section -->
     <div class="section">
       <div class="section-header">
         <h3>Classes</h3>
-        <button class="btn btn-primary btn-sm" id="new-class-btn">+ Create Class</button>
+        <button class="btn btn-primary btn-sm" id="add-class-btn">+ Create Class</button>
       </div>
       <div class="table-wrapper">
         <table id="classes-table">
@@ -65,55 +96,140 @@
               <th>Instructor</th>
               <th>Date & Time</th>
               <th>Enrolled</th>
-              <th></th>
+              <th>Actions</th>
             </tr>
           </thead>
-          <tbody></tbody>
+          <tbody id="classes-tbody">
+            <tr><td colspan="6" class="loading">Loading...</td></tr>
+          </tbody>
         </table>
-        <div class="empty-state" id="classes-empty" style="display:none">
-          No classes yet. Create one to get started.
-        </div>
       </div>
     </div>
 
-    <!-- All Memberships -->
+    <!-- Memberships Section -->
     <div class="section">
       <div class="section-header">
         <h3>All Memberships</h3>
-        <button class="btn btn-warning btn-sm" id="new-staff-membership-btn">Edit Memberships</button>
+        <button class="btn btn-primary btn-sm" id="add-membership-btn">+ Add Membership</button>
       </div>
       <div class="table-wrapper">
         <table id="memberships-table">
           <thead>
             <tr>
               <th>ID</th>
-              <th>Member ID</th>
+              <th>Member</th>
               <th>Plan</th>
               <th>Type</th>
               <th>Price</th>
               <th>Start</th>
               <th>Expires</th>
               <th>Status</th>
-              <th></th>
+              <th>Actions</th>
             </tr>
           </thead>
-          <tbody></tbody>
+          <tbody id="memberships-tbody">
+            <tr><td colspan="9" class="loading">Loading...</td></tr>
+          </tbody>
         </table>
-        <div class="empty-state" id="memberships-empty" style="display:none">
-          No memberships found.
-        </div>
       </div>
     </div>
   </main>
 
-  <!-- Create Class Modal -->
+  <!-- Add/Edit Member Modal -->
+  <div class="modal-overlay" id="member-modal">
+    <div class="modal">
+      <h3 id="member-modal-title">Add New Member</h3>
+      <form id="member-form">
+        <input type="hidden" id="member-id">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="member-first">First Name</label>
+            <input type="text" id="member-first" required>
+          </div>
+          <div class="form-group">
+            <label for="member-last">Last Name</label>
+            <input type="text" id="member-last" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="member-email">Email</label>
+          <input type="email" id="member-email" required>
+        </div>
+        <div class="form-group">
+          <label for="member-phone">Phone</label>
+          <input type="tel" id="member-phone" required>
+        </div>
+        <div class="form-group">
+          <label for="member-dob">Date of Birth</label>
+          <input type="date" id="member-dob" required>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" id="cancel-member">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="member-submit-btn">Add Member</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Add/Edit Instructor Modal -->
+  <div class="modal-overlay" id="instructor-modal">
+    <div class="modal">
+      <h3 id="instructor-modal-title">Add New Instructor</h3>
+      <form id="instructor-form">
+        <input type="hidden" id="instructor-id">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="instructor-first">First Name</label>
+            <input type="text" id="instructor-first" required>
+          </div>
+          <div class="form-group">
+            <label for="instructor-last">Last Name</label>
+            <input type="text" id="instructor-last" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="instructor-email">Email</label>
+          <input type="email" id="instructor-email" required>
+        </div>
+        <div class="form-group">
+          <label for="instructor-phone">Phone</label>
+          <input type="tel" id="instructor-phone" required>
+        </div>
+        <div class="form-group">
+          <label for="instructor-dob">Date of Birth</label>
+          <input type="date" id="instructor-dob" required>
+        </div>
+        <div class="form-group">
+          <label for="instructor-status">Status</label>
+          <select id="instructor-status" required>
+            <option value="active">Active</option>
+            <option value="on_leave">On Leave</option>
+            <option value="inactive">Inactive</option>
+          </select>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" id="cancel-instructor">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="instructor-submit-btn">Add Instructor</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Add/Edit Class Modal -->
   <div class="modal-overlay" id="class-modal">
     <div class="modal">
-      <h3>Create New Class</h3>
+      <h3 id="class-modal-title">Create New Class</h3>
       <form id="class-form">
+        <input type="hidden" id="class-id">
         <div class="form-group">
           <label for="class-name">Class Name</label>
           <input type="text" id="class-name" required placeholder="e.g. Morning Yoga">
+        </div>
+        <div class="form-group">
+          <label for="class-instructor">Instructor</label>
+          <select id="class-instructor" required>
+            <option value="">Select an instructor...</option>
+          </select>
         </div>
         <div class="form-group">
           <label for="class-datetime">Date & Time</label>
@@ -121,96 +237,81 @@
         </div>
         <div class="modal-actions">
           <button type="button" class="btn btn-secondary" id="cancel-class">Cancel</button>
-          <button type="submit" class="btn btn-primary">Create Class</button>
+          <button type="submit" class="btn btn-primary" id="class-submit-btn">Create Class</button>
         </div>
       </form>
     </div>
   </div>
 
-  <!-- Create Membership Modal -->
-  <div class="modal-overlay" id="staff-membership-modal">
+  <!-- Add/Edit Membership Modal -->
+  <div class="modal-overlay" id="membership-modal">
     <div class="modal">
-      <h3>Create Membership for Member</h3>
-      <form id="staff-membership-form">
+      <h3 id="membership-modal-title">Add Membership</h3>
+      <form id="membership-form">
+        <input type="hidden" id="membership-id">
         <div class="form-group">
-          <label for="staff-mem-member-id">Member ID</label>
-          <input type="number" id="staff-mem-member-id" required placeholder="e.g. 1">
+          <label for="mem-member">Member</label>
+          <select id="mem-member" required>
+            <option value="">Select a member...</option>
+          </select>
         </div>
         <div class="form-group">
-          <label for="staff-mem-name">Plan Name</label>
-          <select id="staff-mem-name" required>
+          <label for="mem-name">Plan Name</label>
+          <select id="mem-name" required>
             <option value="Basic Plan">Basic Plan</option>
             <option value="Standard Plan">Standard Plan</option>
             <option value="Premium Plan">Premium Plan</option>
           </select>
         </div>
         <div class="form-group">
-          <label for="staff-mem-type">Duration</label>
-          <select id="staff-mem-type" required>
+          <label for="mem-type">Duration</label>
+          <select id="mem-type" required>
             <option value="monthly">Monthly</option>
             <option value="quarterly">Quarterly</option>
             <option value="annual">Annual</option>
           </select>
         </div>
+        <div class="form-group">
+          <label for="mem-price">Price ($)</label>
+          <input type="number" id="mem-price" step="0.01" required readonly>
+        </div>
         <div class="form-row">
           <div class="form-group">
-            <label for="staff-mem-start">Start Date</label>
-            <input type="date" id="staff-mem-start" required>
+            <label for="mem-start">Start Date</label>
+            <input type="date" id="mem-start" required>
           </div>
           <div class="form-group">
-            <label for="staff-mem-expire">End Date</label>
-            <input type="date" id="staff-mem-expire" required>
+            <label for="mem-expire">Expire Date</label>
+            <input type="date" id="mem-expire" required>
           </div>
         </div>
         <div class="modal-actions">
-          <button type="button" class="btn btn-secondary" id="cancel-staff-membership">Cancel</button>
-          <button type="submit" class="btn btn-primary">Create Membership</button>
+          <button type="button" class="btn btn-secondary" id="cancel-membership">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="membership-submit-btn">Add Membership</button>
         </div>
       </form>
     </div>
   </div>
 
-  <!-- Edit Membership Modal -->
-  <div class="modal-overlay" id="edit-membership-modal">
+  <!-- Member Memberships Modal -->
+  <div class="modal-overlay" id="member-memberships-modal">
     <div class="modal">
-      <h3>Edit Membership</h3>
-      <form id="edit-membership-form">
-        <input type="hidden" id="edit-mem-id">
-        <div class="form-group">
-          <label for="edit-mem-member-id">Member ID</label>
-          <input type="number" id="edit-mem-member-id" required>
-        </div>
-        <div class="form-group">
-          <label for="edit-mem-name">Plan Name</label>
-          <select id="edit-mem-name" required>
-            <option value="Basic Plan">Basic Plan</option>
-            <option value="Standard Plan">Standard Plan</option>
-            <option value="Premium Plan">Premium Plan</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="edit-mem-type">Duration</label>
-          <select id="edit-mem-type" required>
-            <option value="monthly">Monthly</option>
-            <option value="quarterly">Quarterly</option>
-            <option value="annual">Annual</option>
-          </select>
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label for="edit-mem-start">Start Date</label>
-            <input type="date" id="edit-mem-start" required>
-          </div>
-          <div class="form-group">
-            <label for="edit-mem-expire">End Date</label>
-            <input type="date" id="edit-mem-expire" required>
-          </div>
-        </div>
-        <div class="modal-actions">
-          <button type="button" class="btn btn-secondary" id="cancel-edit-membership">Cancel</button>
-          <button type="submit" class="btn btn-primary">Save Changes</button>
-        </div>
-      </form>
+      <h3>Member Memberships</h3>
+      <div id="member-memberships-content"></div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-secondary" id="close-member-memberships">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Instructor Classes Modal -->
+  <div class="modal-overlay" id="instructor-classes-modal">
+    <div class="modal">
+      <h3>Instructor Classes</h3>
+      <div id="instructor-classes-content"></div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-secondary" id="close-instructor-classes">Close</button>
+      </div>
     </div>
   </div>
 

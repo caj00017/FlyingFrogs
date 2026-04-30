@@ -1,3 +1,4 @@
+<!-- public/member.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,16 +9,16 @@
 </head>
 <body>
   <nav class="navbar">
-    <a href="/" class="brand">Flying Frogs</a>
+    <a href="/" class="brand">🐸 Flying Frogs</a>
     <div class="nav-right">
-      <span class="user-name" id="user-name"></span>
+      <span class="user-name" id="user-name">Member</span>
       <button class="btn btn-secondary btn-sm" id="logout-btn">Log Out</button>
     </div>
   </nav>
 
   <main class="dashboard">
     <h2>Member Dashboard</h2>
-    <p class="welcome-text" id="welcome-text"></p>
+    <p class="welcome-text" id="welcome-text">Welcome back! Manage your memberships and classes below.</p>
 
     <!-- My Memberships -->
     <div class="section">
@@ -36,11 +37,10 @@
               <th>Status</th>
             </tr>
           </thead>
-          <tbody></tbody>
+          <tbody id="memberships-tbody">
+            <tr><td colspan="6" class="loading">Loading...</td></tr>
+          </tbody>
         </table>
-        <div class="empty-state" id="memberships-empty" style="display:none">
-          You don't have any memberships yet. Contact staff to get set up.
-        </div>
       </div>
     </div>
 
@@ -61,11 +61,10 @@
               <th></th>
             </tr>
           </thead>
-          <tbody></tbody>
+          <tbody id="classes-tbody">
+            <tr><td colspan="5" class="loading">Loading...</td></tr>
+          </tbody>
         </table>
-        <div class="empty-state" id="classes-empty" style="display:none">
-          No classes are currently available.
-        </div>
       </div>
     </div>
 
@@ -86,11 +85,10 @@
               <th></th>
             </tr>
           </thead>
-          <tbody></tbody>
+          <tbody id="bookings-tbody">
+            <tr><td colspan="6" class="loading">Loading...</td></tr>
+          </tbody>
         </table>
-        <div class="empty-state" id="bookings-empty" style="display:none">
-          You haven't booked any classes yet.
-        </div>
       </div>
     </div>
   </main>

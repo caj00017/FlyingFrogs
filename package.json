@@ -6,7 +6,10 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon app.js",
-    "start": "node app.js"
+    "start": "node app.js",
+    "seed": "node sample-data.js",
+    "setup": "node init_db.js && node sample-data.js",
+    "reset": "rm -f source.db && node init_db.js"
   },
   "repository": {
     "type": "git",

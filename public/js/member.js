@@ -1,31 +1,77 @@
 // Flying Frogs - Member Dashboard Logic
-// Functions do not work yet as the backend is not connected
 
+// public/member.js
 (function () {
-  document.getElementById('user-name').textContent = 'Member';
+  // Get user info from sessionStorage
+  const userEmail = sessionStorage.getItem('userEmail');
+  const userName = sessionStorage.getItem('userName') || 'Member';
+  
+  // Redirect to login if no user info
+  if (!userEmail) {
+    window.location.href = '/login';
+    return;
+  }
+
+  // Display user email in navbar
+  const userNameElement = document.getElementById('user-name');
+  if (userNameElement) {
+    userNameElement.textContent = userEmail;
+  }
+  
   document.getElementById('welcome-text').textContent =
-    'Welcome back! Manage your memberships and classes below.';
+    `Welcome back, ${userEmail}! Manage your memberships and classes below.`;
 
   document.getElementById('logout-btn').addEventListener('click', () => {
-    window.location.href = '/';
+    sessionStorage.clear();
+    window.location.href = '/login';
   });
 
-  // Memberships
+  // Store the current member's ID once we find it
+  let currentMemberId = null;
+
+  // Find the member by email
+  async function findCurrentMember() {
+    try {
+      const res = await fetch('/api/members');
+      const members = await res.json();
+      const currentMember = members.find(m => m.email === userEmail);
+      
+      if (currentMember) {
+        currentMemberId = currentMember.member_id;
+        return currentMember;
+      } else {
+        document.getElementById('memberships-tbody').innerHTML = 
+          '<tr><td colspan="6">No member account found for this email. Please contact staff.</td></tr>';
+        document.getElementById('classes-tbody').innerHTML = 
+          '<tr><td colspan="5">No member account found. Staff need to create your member profile first.</td></tr>';
+        document.getElementById('bookings-tbody').innerHTML = 
+          '<tr><td colspan="6">No member account found.</td></tr>';
+        return null;
+      }
+    } catch (error) {
+      console.error('Error finding member:', error);
+      return null;
+    }
+  }
+
+  // Load Memberships (only for current member)
   async function loadMemberships() {
+    if (!currentMemberId) return;
+    
     try {
       const res = await fetch('/api/memberships');
-      const data = await res.json();
-      const tbody = document.querySelector('#memberships-table tbody');
-      const empty = document.getElementById('memberships-empty');
+      const allMemberships = await res.json();
+      // Filter to only show current member's memberships
+      const myMemberships = allMemberships.filter(m => m.member_id === currentMemberId);
+      
+      const tbody = document.getElementById('memberships-tbody');
 
-      if (data.length === 0) {
-        tbody.innerHTML = '';
-        empty.style.display = 'block';
+      if (myMemberships.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6">You don\'t have any memberships yet. Contact staff to get set up.</td></tr>';
         return;
       }
-      empty.style.display = 'none';
 
-      tbody.innerHTML = data.map(m => {
+      tbody.innerHTML = myMemberships.map(m => {
         const isActive = new Date(m.expire_date) >= new Date();
         return `<tr>
           <td>${m.name}</td>
@@ -37,47 +83,50 @@
         </tr>`;
       }).join('');
     } catch {
-      document.getElementById('memberships-empty').style.display = 'block';
+      document.getElementById('memberships-tbody').innerHTML = 
+        '<tr><td colspan="6" class="error">Error loading memberships</td></tr>';
     }
   }
 
-  // Classes
-
+  // Load Available Classes (all classes - any member can book)
   let classesData = [];
 
   async function loadClasses() {
     try {
       const res = await fetch('/api/classes');
+      const instructorsRes = await fetch('/api/instructors');
       classesData = await res.json();
-      const tbody = document.querySelector('#classes-table tbody');
-      const empty = document.getElementById('classes-empty');
+      const instructors = await instructorsRes.json();
+      
+      const tbody = document.getElementById('classes-tbody');
 
       if (classesData.length === 0) {
-        tbody.innerHTML = '';
-        empty.style.display = 'block';
+        tbody.innerHTML = '<tr><td colspan="5">No classes available at this time.</td></tr>';
         return;
       }
-      empty.style.display = 'none';
 
       tbody.innerHTML = classesData.map(c => {
+        const instructor = instructors.find(i => i.instructor_id === c.instructor_id);
+        const instructorName = instructor ? `${instructor.first_name} ${instructor.last_name}` : 'TBD';
         const dt = new Date(c.date_time).toLocaleString();
         return `<tr>
           <td>${c.class_name}</td>
-          <td>${c.instructor_first || 'TBD'} ${c.instructor_last || ''}</td>
+          <td>${instructorName}</td>
           <td>${dt}</td>
-          <td>${c.num_members}</td>
+          <td>${c.num_members || 0}</td>
           <td><button class="btn btn-outline btn-sm" onclick="bookClass(${c.class_id})">Book</button></td>
         </tr>`;
       }).join('');
+
+      // Update booking modal dropdown
+      updateBookingModalDropdown();
     } catch {
-      document.getElementById('classes-empty').style.display = 'block';
+      document.getElementById('classes-tbody').innerHTML = 
+        '<tr><td colspan="5" class="error">Error loading classes</td></tr>';
     }
   }
 
-  // Book Now modal
-  const bookingModal = document.getElementById('booking-modal');
-
-  document.getElementById('book-now-btn').addEventListener('click', () => {
+  function updateBookingModalDropdown() {
     const select = document.getElementById('booking-class');
     if (classesData.length === 0) {
       select.innerHTML = '<option value="" disabled selected>No classes available</option>';
@@ -88,12 +137,20 @@
           return `<option value="${c.class_id}">${c.class_name} — ${dt}</option>`;
         }).join('');
     }
+  }
+
+  // Booking Modal
+  const bookingModal = document.getElementById('booking-modal');
+
+  document.getElementById('book-now-btn').addEventListener('click', () => {
+    updateBookingModalDropdown();
     bookingModal.classList.add('active');
   });
 
   document.getElementById('cancel-booking').addEventListener('click', () => {
     bookingModal.classList.remove('active');
   });
+
   bookingModal.addEventListener('click', (e) => {
     if (e.target === bookingModal) bookingModal.classList.remove('active');
   });
@@ -101,67 +158,101 @@
   document.getElementById('booking-form').addEventListener('submit', async (e) => {
     e.preventDefault();
     const classId = document.getElementById('booking-class').value;
-    if (!classId) return;
+    if (!classId || !currentMemberId) return;
 
     try {
       const res = await fetch('/api/bookings', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ member_id: 1, class_id: Number(classId) })
+        body: JSON.stringify({
+          member_id: currentMemberId,
+          class_id: Number(classId),
+          booking_time: new Date().toISOString().replace('T', ' ').slice(0, 19),
+          cancellation_time: null,
+          status: 'confirmed'
+        })
       });
       if (res.ok) {
         bookingModal.classList.remove('active');
         loadBookings();
         loadClasses();
+        alert('Class booked successfully!');
+      } else {
+        const error = await res.json();
+        alert('Error booking class: ' + error.error);
       }
-    } catch { /* backend not connected yet */ }
+    } catch (error) {
+      alert('Error booking class');
+    }
   });
 
   window.bookClass = async function (classId) {
+    if (!currentMemberId) return;
+    
     try {
       const res = await fetch('/api/bookings', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ member_id: 1, class_id: classId })
+        body: JSON.stringify({
+          member_id: currentMemberId,
+          class_id: classId,
+          booking_time: new Date().toISOString().replace('T', ' ').slice(0, 19),
+          cancellation_time: null,
+          status: 'confirmed'
+        })
       });
       if (res.ok) {
         loadBookings();
         loadClasses();
+        alert('Class booked successfully!');
       }
-    } catch { /* backend not connected yet */ }
+    } catch {
+      alert('Error booking class');
+    }
   };
 
-  // Bookings
-
+  // Load My Bookings (only for current member)
   async function loadBookings() {
+    if (!currentMemberId) return;
+    
     try {
       const res = await fetch('/api/bookings');
-      const data = await res.json();
-      const tbody = document.querySelector('#bookings-table tbody');
-      const empty = document.getElementById('bookings-empty');
+      const allBookings = await res.json();
+      // Filter to only show current member's bookings
+      const myBookings = allBookings.filter(b => b.member_id === currentMemberId);
+      
+      const classesRes = await fetch('/api/classes');
+      const classes = await classesRes.json();
+      const instructorsRes = await fetch('/api/instructors');
+      const instructors = await instructorsRes.json();
+      
+      const tbody = document.getElementById('bookings-tbody');
 
-      if (data.length === 0) {
-        tbody.innerHTML = '';
-        empty.style.display = 'block';
+      if (myBookings.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6">You haven\'t booked any classes yet.</td></tr>';
         return;
       }
-      empty.style.display = 'none';
 
-      tbody.innerHTML = data.map(b => {
-        const classDate = new Date(b.date_time).toLocaleString();
+      tbody.innerHTML = myBookings.map(b => {
+        const classItem = classes.find(c => c.class_id === b.class_id);
+        const instructor = classItem ? instructors.find(i => i.instructor_id === classItem.instructor_id) : null;
+        const className = classItem ? classItem.class_name : `Class #${b.class_id}`;
+        const instructorName = instructor ? `${instructor.first_name} ${instructor.last_name}` : 'TBD';
+        const classDate = classItem ? new Date(classItem.date_time).toLocaleString() : 'TBD';
         const bookedAt = new Date(b.booking_time).toLocaleString();
-        const badgeClass = `badge-${b.status}`;
+        
         return `<tr>
-          <td>${b.class_name || 'Class #' + b.class_id}</td>
-          <td>${b.instructor_first || 'TBD'} ${b.instructor_last || ''}</td>
+          <td>${className}</td>
+          <td>${instructorName}</td>
           <td>${classDate}</td>
           <td>${bookedAt}</td>
-          <td><span class="badge ${badgeClass}">${b.status}</span></td>
+          <td><span class="badge badge-${b.status}">${b.status}</span></td>
           <td>${b.status === 'confirmed' ? `<button class="btn btn-danger btn-sm" onclick="cancelBooking(${b.booking_id})">Cancel</button>` : ''}</td>
         </tr>`;
       }).join('');
     } catch {
-      document.getElementById('bookings-empty').style.display = 'block';
+      document.getElementById('bookings-tbody').innerHTML = 
+        '<tr><td colspan="6" class="error">Error loading bookings</td></tr>';
     }
   }
 
@@ -169,12 +260,24 @@
     if (!confirm('Are you sure you want to cancel this booking?')) return;
     try {
       const res = await fetch(`/api/bookings/${bookingId}`, { method: 'DELETE' });
-      if (res.ok) loadBookings();
-    } catch { /* backend not connected yet */ }
+      if (res.ok) {
+        loadBookings();
+        alert('Booking cancelled successfully!');
+      }
+    } catch {
+      alert('Error cancelling booking');
+    }
   };
 
-  // Initial load
-  loadMemberships();
-  loadClasses();
-  loadBookings();
+  // Initialize - first find member, then load data
+  async function initialize() {
+    const member = await findCurrentMember();
+    if (member) {
+      loadMemberships();
+      loadClasses();
+      loadBookings();
+    }
+  }
+
+  initialize();
 })();

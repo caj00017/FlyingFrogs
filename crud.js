@@ -8,6 +8,20 @@ const Database = require('better-sqlite3');
 // opens the sqlite database file. sqlite creates it if it doesn't exist i believe
 const db = new Database('source.db');
 
+db.pragma('journal_mode = WAL');
+db.pragma('foreign_keys = ON');
+
+// Clean up WAL files on exit
+process.on('exit', () => {
+  db.pragma('wal_checkpoint(TRUNCATE)');
+  db.close();
+});
+
+process.on('SIGINT', () => {
+  db.pragma('wal_checkpoint(TRUNCATE)');
+  db.close();
+  process.exit();
+});
 
 // MEMBERS
 
@@ -20,17 +34,17 @@ const db = new Database('source.db');
  * @param {*} dob memebers date of birth (YYY-MM-DD)
  */
 function createMember(first_name, last_name, email, phone, dob) {
-  let sql = `
+  const sql = `
   INSERT INTO Members (first_name, last_name, email, phone, dob)
   VALUES (?, ?, ?, ?, ?)
-  ;`
+  `;
 
-  console.log("Executing query, let's hoep this works: " + sql);
+  console.log(`Creating member: ${first_name} ${last_name}`);
 
   // apparently this stops sql injections to which is pretty cool becuase it compiles the sql structure before user data touches it
   const stmt = db.prepare(sql);
 
-  const result = stmt.run(first_name, last_name, email, phone, dob); 
+  const result = stmt.run(first_name, last_name, email, String(phone), dob);
 
   return result.lastInsertRowid;
 }
@@ -87,8 +101,8 @@ function updateMember(id, first_name, last_name, email, phone, dob){
 
   const stmt = db.prepare(sql);
 
-  const result = stmt.run(first_name, last_name, email, phone, dob, id);
-  return result.lastInsertRowid;
+  const result = stmt.run(first_name, last_name, email, String(phone), dob, id);
+  return result.changes;
 
 }
 
@@ -147,11 +161,11 @@ function createMembership(member_id, name, price, type, start_date, expire_date)
     VALUES (?, ?, ?, ?, ?, ?)
   `;
 
-  console.log("Attempting to execute query: " + sql);
+  console.log(`Creating membership: ${name} for member ${member_id}`);
 
   const stmt = db.prepare(sql);
 
-  const result = stmt.run(member_id, name, price, type, start_date, expire_date);
+  const result = stmt.run(member_id, name, Number(price), type, start_date, expire_date);
   return result.lastInsertRowid;
 }
 
@@ -161,7 +175,7 @@ function createMembership(member_id, name, price, type, start_date, expire_date)
  */
 function readMembership(membership_id) {
   // prepare query to select a specific Member based on their id
-  const sql = "SELECT * FROM Memberships WHERE membership_id = ?"
+  const sql = "SELECT * FROM Memberships WHERE membership_id = ?";
 
   // notify query execution and compile query
   console.log("Attempting to execute query: " + sql);
@@ -209,7 +223,7 @@ function updateMembership(membership_id, member_id, name, price, type, start_dat
  
   const stmt = db.prepare(sql);
  
-  const result = stmt.run(member_id, name, price, type, start_date, expire_date, membership_id);
+  const result = stmt.run(member_id, name, Number(price), type, start_date, expire_date, membership_id);
  
   return result.changes;
 }
@@ -241,11 +255,11 @@ function createInstructor(first_name, last_name, email, phone, dob, status) {
   VALUES (?, ?, ?, ?, ?, ?)`;
 
   // notify query execution and compile the query
-  console.log("Preparing to execute query: " + sql);
+  console.log(`Creating instructor: ${first_name} ${last_name}`);
   const stmt = db.prepare(sql);
 
   // execute the query
-  const result = stmt.run(first_name, last_name, email, phone, dob, status); 
+  const result = stmt.run(first_name, last_name, email, String(phone), dob, status);
 
   // return the result of the query execution
   return result.lastInsertRowid;
@@ -257,7 +271,7 @@ function createInstructor(first_name, last_name, email, phone, dob, status) {
  */
 function readInstructor(instructor_id) {
   // prepare query to select a specific Instructor based on their id
-  const sql = "SELECT * FROM Instructors WHERE instructor_id = ?"
+  const sql = "SELECT * FROM Instructors WHERE instructor_id = ?";
 
   // notify query execution and compile query
   console.log("Attempting to execute query: " + sql);
@@ -311,7 +325,7 @@ function updateInstructor(instructor_id, first_name, last_name, email, phone) {
  
   const stmt = db.prepare(sql);
  
-  const result = stmt.run(first_name, last_name, email, phone, instructor_id);
+  const result = stmt.run(first_name, last_name, email, String(phone), instructor_id);
  
   return result.changes;
 }
@@ -373,7 +387,7 @@ function createClass(class_name, instructor_id, date_time){
   VALUES (?, ?, ?)
   `;
 
-  console.log("Attempting to execute query: " + sql);
+  console.log(`Creating class: ${class_name}`);
 
   const stmt = db.prepare(sql);
   const result = stmt.run(class_name, instructor_id, date_time);
@@ -482,11 +496,11 @@ function createBooking(member_id, class_id, booking_time, cancellation_time, sta
   `;
 
   // notify query execution and compile query
-  console.log("Attempting to execute query: " + sql);
+  console.log(`Creating booking: member ${member_id} for class ${class_id}`);
   const stmt = db.prepare(sql);
 
   // execute the query and return result
-  const result = stmt.run(member_id, class_id, booking_time, cancellation_time, status);
+  const result = stmt.run(member_id, class_id, booking_time, cancellation_time || null, status);
   return result.lastInsertRowid;
 }
 
@@ -495,7 +509,7 @@ function createBooking(member_id, class_id, booking_time, cancellation_time, sta
  */
 function readBooking(booking_id) {
   // prepare query to select a specific Booking based on its id
-  const sql = "SELECT * FROM Bookings WHERE booking_id = ?"
+  const sql = "SELECT * FROM Bookings WHERE booking_id = ?";
 
   // notify query execution and compile query
   console.log("Attempting to execute query: " + sql);
