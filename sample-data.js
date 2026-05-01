@@ -27,6 +27,19 @@ try {
 
  const instructor4 = createInstructor('Emily', 'Davis', 'emily@flyingfrogs.com', '5550104', '1992-04-18', 'on_leave');
  console.log(`  ✓ Created instructor: Emily Davis (ID: ${instructor4})`);
+
+ // New instructors (added 4/1/26)
+  const instructor5 = createInstructor('Carlos', 'Reyes', 'carlos@flyingfrogs.com', '5550105', '1987-09-05', 'active');
+  console.log(`  ✓ Created instructor: Carlos Reyes (ID: ${instructor5})`);
+ 
+  const instructor6 = createInstructor('Priya', 'Patel', 'priya@flyingfrogs.com', '5550106', '1994-02-14', 'active');
+  console.log(`  ✓ Created instructor: Priya Patel (ID: ${instructor6})`);
+ 
+  const instructor7 = createInstructor('James', 'O\'Brien', 'james@flyingfrogs.com', '5550107', '1983-06-21', 'active');
+  console.log(`  ✓ Created instructor: James O'Brien (ID: ${instructor7})`);
+ 
+  const instructor8 = createInstructor('Natalie', 'Chen', 'natalie@flyingfrogs.com', '5550108', '1991-10-09', 'inactive');
+  console.log(`  ✓ Created instructor: Natalie Chen (ID: ${instructor8})`);
 } catch (error) {
  console.error('  ✗ Error creating instructors:', error.message);
 }
@@ -53,6 +66,37 @@ try {
 
  const member5 = createMember('Eva', 'Anderson', 'eva@email.com', '5550205', '1997-06-28');
  console.log(`  ✓ Created member: Eva Anderson (ID: ${member5})`);
+
+ // New members (added 4/1/26)
+ const member6 = createMember('Steve', 'Anderson', 'steve@email.com', '5330205', '1993-06-27');
+ console.log(`  ✓ Created member: Steve Anderson (ID: ${member6})`);
+
+  const member7 = createMember('Lena', 'Nguyen', 'lena@email.com', '5550207', '1996-03-11');
+  console.log(`  ✓ Created member: Lena Nguyen (ID: ${member7})`);
+ 
+  const member8 = createMember('Omar', 'Hassan', 'omar@email.com', '5550208', '1990-11-25');
+  console.log(`  ✓ Created member: Omar Hassan (ID: ${member8})`);
+ 
+  const member9 = createMember('Tina', 'Roberts', 'tina@email.com', '5550209', '1999-04-07');
+  console.log(`  ✓ Created member: Tina Roberts (ID: ${member9})`);
+ 
+  const member10 = createMember('Marcus', 'Lee', 'marcus@email.com', '5550210', '1988-07-19');
+  console.log(`  ✓ Created member: Marcus Lee (ID: ${member10})`);
+ 
+  const member11 = createMember('Sofia', 'Russo', 'sofia@email.com', '5550211', '2000-09-30');
+  console.log(`  ✓ Created member: Sofia Russo (ID: ${member11})`);
+ 
+  const member12 = createMember('Derek', 'Kim', 'derek@email.com', '5550212', '1994-01-22');
+  console.log(`  ✓ Created member: Derek Kim (ID: ${member12})`);
+ 
+  const member13 = createMember('Jasmine', 'Taylor', 'jasmine@email.com', '5550213', '1997-08-04');
+  console.log(`  ✓ Created member: Jasmine Taylor (ID: ${member13})`);
+ 
+  const member14 = createMember('Ryan', 'Murphy', 'ryan@email.com', '5550214', '1991-02-16');
+  console.log(`  ✓ Created member: Ryan Murphy (ID: ${member14})`);
+ 
+  const member15 = createMember('Aisha', 'Okafor', 'aisha@email.com', '5550215', '2001-05-13');
+  console.log(`  ✓ Created member: Aisha Okafor (ID: ${member15})`);
 } catch (error) {
  console.error('  ✗ Error creating members:', error.message);
 }
@@ -62,15 +106,47 @@ try {
 console.log('\nCreating classes...');
 try {
  const today = new Date();
- const tomorrow = new Date(today);
- tomorrow.setDate(tomorrow.getDate() + 1);
- tomorrow.setHours(8, 0, 0, 0);
+ 
+  const tomorrow = new Date(today);
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  tomorrow.setHours(8, 0, 0, 0);
+ 
   const nextDay = new Date(today);
- nextDay.setDate(nextDay.getDate() + 2);
- nextDay.setHours(10, 0, 0, 0);
+  nextDay.setDate(nextDay.getDate() + 2);
+  nextDay.setHours(10, 0, 0, 0);
+ 
   const nextWeek = new Date(today);
- nextWeek.setDate(nextWeek.getDate() + 7);
- nextWeek.setHours(14, 0, 0, 0);
+  nextWeek.setDate(nextWeek.getDate() + 7);
+  nextWeek.setHours(14, 0, 0, 0);
+ 
+  // New date helpers (added 4/1/26)
+  const in3Days = new Date(today);
+  in3Days.setDate(in3Days.getDate() + 3);
+  in3Days.setHours(9, 0, 0, 0);
+ 
+  const in4Days = new Date(today);
+  in4Days.setDate(in4Days.getDate() + 4);
+  in4Days.setHours(11, 30, 0, 0);
+ 
+  const in5Days = new Date(today);
+  in5Days.setDate(in5Days.getDate() + 5);
+  in5Days.setHours(7, 0, 0, 0);
+ 
+  const in10Days = new Date(today);
+  in10Days.setDate(in10Days.getDate() + 10);
+  in10Days.setHours(16, 0, 0, 0);
+ 
+  const in12Days = new Date(today);
+  in12Days.setDate(in12Days.getDate() + 12);
+  in12Days.setHours(18, 30, 0, 0);
+ 
+  const in14Days = new Date(today);
+  in14Days.setDate(in14Days.getDate() + 14);
+  in14Days.setHours(9, 30, 0, 0);
+ 
+  const in3DaysEvening = new Date(today);
+  in3DaysEvening.setDate(in3DaysEvening.getDate() + 3);
+  in3DaysEvening.setHours(18, 0, 0, 0);
 
 
  const formatDateTime = (date) => {
@@ -101,6 +177,31 @@ try {
 
  const class5 = createClass('Strength Training', 2, formatDateTime(nextWeek));
  console.log(`  ✓ Created class: Strength Training (ID: ${class5})`);
+
+// New classes (added 4/1/26)
+  const class6 = createClass('Zumba', 5, formatDateTime(in3Days));
+  console.log(`  ✓ Created class: Zumba (ID: ${class6})`);
+ 
+  const class7 = createClass('Power Yoga', 6, formatDateTime(in4Days));
+  console.log(`  ✓ Created class: Power Yoga (ID: ${class7})`);
+ 
+  const class8 = createClass('Boxing Fundamentals', 3, formatDateTime(in5Days));
+  console.log(`  ✓ Created class: Boxing Fundamentals (ID: ${class8})`);
+ 
+  const class9 = createClass('Barre', 6, formatDateTime(in3DaysEvening));
+  console.log(`  ✓ Created class: Barre (ID: ${class9})`);
+ 
+  const class10 = createClass('Aqua Aerobics', 7, formatDateTime(in10Days));
+  console.log(`  ✓ Created class: Aqua Aerobics (ID: ${class10})`);
+ 
+  const class11 = createClass('Meditation & Breathwork', 1, formatDateTime(in12Days));
+  console.log(`  ✓ Created class: Meditation & Breathwork (ID: ${class11})`);
+ 
+  const class12 = createClass('Kettlebell Circuit', 5, formatDateTime(in14Days));
+  console.log(`  ✓ Created class: Kettlebell Circuit (ID: ${class12})`);
+ 
+  const class13 = createClass('Functional Fitness', 7, formatDateTime(in5Days));
+  console.log(`  ✓ Created class: Functional Fitness (ID: ${class13})`);
 } catch (error) {
  console.error('  ✗ Error creating classes:', error.message);
 }
@@ -119,6 +220,17 @@ try {
  const threeMonths = new Date(today);
  threeMonths.setMonth(threeMonths.getMonth() + 3);
 
+// New membership helpers (added 4/1/26)
+ const twoMonthsAgo = new Date(today);
+ twoMonthsAgo.setMonth(twoMonthsAgo.getMonth() - 2);
+ const oneMonthAgo = new Date(today);
+ oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
+ const sixMonths = new Date(today);
+ sixMonths.setMonth(sixMonths.getMonth() + 6);
+ const twoWeeksAgo = new Date(today);
+ twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14);
+ const twoWeeksAhead = new Date(today);
+ twoWeeksAhead.setDate(twoWeeksAhead.getDate() + 14);
 
  const formatDate = (date) => date.toISOString().split('T')[0];
 
@@ -141,6 +253,37 @@ try {
 
  const membership5 = createMembership(5, 'Standard Plan', 34.99, 'monthly', formatDate(today), formatDate(nextMonth));
  console.log(`  ✓ Created membership: Standard Plan monthly for Member #5 (ID: ${membership5})`);
+
+// New memberships (added 4/1/26)
+  const membership6 = createMembership(6, 'Premium Plan', 499.99, 'annual', formatDate(today), formatDate(nextYear));
+  console.log(`  ✓ Created membership: Premium Plan annual for Member #6 (ID: ${membership6})`);
+ 
+  const membership7 = createMembership(7, 'Basic Plan', 19.99, 'monthly', formatDate(today), formatDate(nextMonth));
+  console.log(`  ✓ Created membership: Basic Plan monthly for Member #7 (ID: ${membership7})`);
+ 
+  const membership8 = createMembership(8, 'Standard Plan', 89.99, 'quarterly', formatDate(today), formatDate(threeMonths));
+  console.log(`  ✓ Created membership: Standard Plan quarterly for Member #8 (ID: ${membership8})`);
+ 
+  const membership9 = createMembership(9, 'Premium Plan', 249.99, 'semi-annual', formatDate(today), formatDate(sixMonths));
+  console.log(`  ✓ Created membership: Premium Plan semi-annual for Member #9 (ID: ${membership9})`);
+ 
+  const membership10 = createMembership(10, 'Standard Plan', 34.99, 'monthly', formatDate(twoWeeksAgo), formatDate(twoWeeksAhead));
+  console.log(`  ✓ Created membership: Standard Plan monthly for Member #10 (ID: ${membership10})`);
+ 
+  const membership11 = createMembership(11, 'Basic Plan', 19.99, 'monthly', formatDate(today), formatDate(nextMonth));
+  console.log(`  ✓ Created membership: Basic Plan monthly for Member #11 (ID: ${membership11})`);
+ 
+  const membership12 = createMembership(12, 'Premium Plan', 499.99, 'annual', formatDate(today), formatDate(nextYear));
+  console.log(`  ✓ Created membership: Premium Plan annual for Member #12 (ID: ${membership12})`);
+ 
+  const membership13 = createMembership(13, 'Standard Plan', 89.99, 'quarterly', formatDate(twoMonthsAgo), formatDate(oneMonthAgo));
+  console.log(`  ✓ Created membership: Standard Plan quarterly for Member #13 (EXPIRED) (ID: ${membership13})`);
+ 
+  const membership14 = createMembership(14, 'Basic Plan', 19.99, 'monthly', formatDate(today), formatDate(nextMonth));
+  console.log(`  ✓ Created membership: Basic Plan monthly for Member #14 (ID: ${membership14})`);
+ 
+  const membership15 = createMembership(15, 'Premium Plan', 499.99, 'annual', formatDate(today), formatDate(nextYear));
+  console.log(`  ✓ Created membership: Premium Plan annual for Member #15 (ID: ${membership15})`);
 } catch (error) {
  console.error('  ✗ Error creating memberships:', error.message);
 }
@@ -183,6 +326,49 @@ try {
 
  const booking6 = createBooking(1, 5, formatDateTime(now), null, 'confirmed');
  console.log(`  ✓ Created booking: Member #1 → Class #5 (ID: ${booking6})`);
+
+// New bookings (added 4/1/26)
+  const booking7 = createBooking(7, 6, formatDateTime(now), null, 'confirmed');
+  console.log(`  ✓ Created booking: Member #7 → Class #6 (ID: ${booking7})`);
+ 
+  const booking8 = createBooking(8, 6, formatDateTime(now), null, 'confirmed');
+  console.log(`  ✓ Created booking: Member #8 → Class #6 (ID: ${booking8})`);
+ 
+  const booking9 = createBooking(9, 7, formatDateTime(now), null, 'confirmed');
+  console.log(`  ✓ Created booking: Member #9 → Class #7 (ID: ${booking9})`);
+ 
+  const booking10 = createBooking(10, 7, formatDateTime(now), null, 'waitlisted');
+  console.log(`  ✓ Created booking: Member #10 → Class #7 (WAITLISTED) (ID: ${booking10})`);
+ 
+  const booking11 = createBooking(11, 8, formatDateTime(now), null, 'confirmed');
+  console.log(`  ✓ Created booking: Member #11 → Class #8 (ID: ${booking11})`);
+ 
+  const booking12 = createBooking(12, 8, formatDateTime(now), null, 'confirmed');
+  console.log(`  ✓ Created booking: Member #12 → Class #8 (ID: ${booking12})`);
+ 
+  const booking13 = createBooking(13, 9, formatDateTime(now), null, 'cancelled');
+  console.log(`  ✓ Created booking: Member #13 → Class #9 (CANCELLED) (ID: ${booking13})`);
+ 
+  const booking14 = createBooking(14, 10, formatDateTime(now), null, 'confirmed');
+  console.log(`  ✓ Created booking: Member #14 → Class #10 (ID: ${booking14})`);
+ 
+  const booking15 = createBooking(15, 10, formatDateTime(now), null, 'confirmed');
+  console.log(`  ✓ Created booking: Member #15 → Class #10 (ID: ${booking15})`);
+ 
+  const booking16 = createBooking(6, 11, formatDateTime(now), null, 'confirmed');
+  console.log(`  ✓ Created booking: Member #6 → Class #11 (ID: ${booking16})`);
+ 
+  const booking17 = createBooking(2, 12, formatDateTime(now), null, 'confirmed');
+  console.log(`  ✓ Created booking: Member #2 → Class #12 (ID: ${booking17})`);
+ 
+  const booking18 = createBooking(5, 12, formatDateTime(now), null, 'confirmed');
+  console.log(`  ✓ Created booking: Member #5 → Class #12 (ID: ${booking18})`);
+ 
+  const booking19 = createBooking(9, 13, formatDateTime(now), null, 'waitlisted');
+  console.log(`  ✓ Created booking: Member #9 → Class #13 (WAITLISTED) (ID: ${booking19})`);
+ 
+  const booking20 = createBooking(3, 5, formatDateTime(now), null, 'confirmed');
+  console.log(`  ✓ Created booking: Member #3 → Class #5 (ID: ${booking20})`);
 } catch (error) {
  console.error('  ✗ Error creating bookings:', error.message);
 }
@@ -190,9 +376,9 @@ try {
 
 console.log('\n✅ Sample data seeding complete!');
 console.log('\n📊 Summary:');
-console.log('   - 4 Instructors');
-console.log('   - 5 Members');
-console.log('   - 5 Classes');
-console.log('   - 5 Memberships (1 expired)');
-console.log('   - 6 Bookings (1 cancelled)');
+console.log('   - 8 Instructors');
+console.log('   - 15 Members');
+console.log('   - 13 Classes');
+console.log('   - 15 Memberships (2 expired)');
+console.log('   - 20 Bookings (2 cancelled & 2 waitlisted)');
 console.log('\n🚀 Ready to start! Run: npm run start');
