@@ -36,6 +36,44 @@
   let membersData = [];
   let instructorsData = [];
   let classesData = [];
+  let membershipsData = [];
+
+  // Pagination state
+  const ITEMS_PER_PAGE = 10;
+  let currentPages = {
+    members: 1,
+    instructors: 1,
+    classes: 1,
+    memberships: 1
+  };
+
+  // ============ PAGINATION HELPER ============
+  function renderPagination(tableId, totalItems, currentPage, onPageChange) {
+    const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
+    if (totalPages <= 1) return '';
+    let html = '<div class="pagination">';
+    html += `<button ${currentPage === 1 ? 'disabled' : ''} onclick="${onPageChange}(${currentPage - 1})">← Previous</button>`;
+    
+    // Page numbers
+    for (let i = 1; i <= totalPages; i++) {
+      if (i === 1 || i === totalPages || (i >= currentPage - 2 && i <= currentPage + 2)) {
+        html += `<button class="${i === currentPage ? 'active' : ''}" onclick="${onPageChange}(${i})">${i}</button>`;
+      } else if (i === currentPage - 3 || i === currentPage + 3) {
+        html += '<span class="page-info">...</span>';
+      }
+    }
+    
+    html += `<button ${currentPage === totalPages ? 'disabled' : ''} onclick="${onPageChange}(${currentPage + 1})">Next →</button>`;
+    html += `<span class="page-info">Page ${currentPage} of ${totalPages}</span>`;
+    html += '</div>';
+    return html;
+  }
+
+  function getPaginatedData(data, page) {
+    const start = (page - 1) * ITEMS_PER_PAGE;
+    const end = start + ITEMS_PER_PAGE;
+    return data.slice(start, end);
+  }
 
   // ============ MODAL HELPERS ============
   function openModal(modalId) {
@@ -62,10 +100,14 @@
         );
       }
       
+      currentPages.members = 1;
       renderMembersTable(filtered);
     } catch {
-      document.getElementById('members-tbody').innerHTML = 
-        '<tr><td colspan="6" class="error">Error loading members</td></tr>';
+      // Only show error if table is empty
+      const tbody = document.getElementById('members-tbody');
+      if (!tbody.innerHTML || tbody.innerHTML.includes('Loading')) {
+        tbody.innerHTML = '<tr><td colspan="6" class="error">Error loading members</td></tr>';
+      }
     }
   }
 
@@ -73,9 +115,13 @@
     const tbody = document.getElementById('members-tbody');
     if (!members.length) {
       tbody.innerHTML = '<tr><td colspan="6">No members found.</td></tr>';
+      document.getElementById('members-pagination').innerHTML = '';
       return;
     }
-    tbody.innerHTML = members.map(m => `
+
+    const paginatedData = getPaginatedData(members, currentPages.members);
+    
+    tbody.innerHTML = paginatedData.map(m => `
       <tr>
         <td>${m.member_id}</td>
         <td>${escapeHtml(m.first_name)} ${escapeHtml(m.last_name)}</td>
@@ -89,7 +135,21 @@
         </td>
       </tr>
     `).join('');
+
+    document.getElementById('members-pagination').innerHTML = 
+      renderPagination('members', members.length, currentPages.members, 'changeMembersPage');
   }
+
+  window.changeMembersPage = function(page) {
+    currentPages.members = page;
+    const query = document.getElementById('member-search').value.trim();
+    const filtered = query ? membersData.filter(m => 
+      m.first_name.toLowerCase().includes(query.toLowerCase()) ||
+      m.last_name.toLowerCase().includes(query.toLowerCase()) ||
+      m.email.toLowerCase().includes(query.toLowerCase())
+    ) : membersData;
+    renderMembersTable(filtered);
+  };
 
   // Member search
   document.getElementById('search-btn').addEventListener('click', () => {
@@ -130,7 +190,7 @@
       first_name: document.getElementById('member-first').value,
       last_name: document.getElementById('member-last').value,
       email: document.getElementById('member-email').value,
-      phone: document.getElementById('member-phone').value,
+      phone: document.getElementById('member-phone').value.replace(/\D/g, ''), // Clean phone
       dob: document.getElementById('member-dob').value
     };
 
@@ -203,7 +263,7 @@
       const content = document.getElementById('member-memberships-content');
       
       if (memberMemberships.length === 0) {
-        content.innerHTML = `<p>${memberName} has no memberships.</p>`;
+        content.innerHTML = `<p>${escapeHtml(memberName)} has no memberships.</p>`;
       } else {
         content.innerHTML = `
           <h4>${escapeHtml(memberName)}'s Memberships</h4>
@@ -264,11 +324,14 @@
         );
       }
       
+      currentPages.instructors = 1;
       renderInstructorsTable(filtered);
       updateInstructorDropdowns();
     } catch {
-      document.getElementById('instructors-tbody').innerHTML = 
-        '<tr><td colspan="7" class="error">Error loading instructors</td></tr>';
+      const tbody = document.getElementById('instructors-tbody');
+      if (!tbody.innerHTML || tbody.innerHTML.includes('Loading')) {
+        tbody.innerHTML = '<tr><td colspan="7" class="error">Error loading instructors</td></tr>';
+      }
     }
   }
 
@@ -276,9 +339,13 @@
     const tbody = document.getElementById('instructors-tbody');
     if (!instructors.length) {
       tbody.innerHTML = '<tr><td colspan="7">No instructors found. Add one to assign classes.</td></tr>';
+      document.getElementById('instructors-pagination').innerHTML = '';
       return;
     }
-    tbody.innerHTML = instructors.map(i => {
+
+    const paginatedData = getPaginatedData(instructors, currentPages.instructors);
+    
+    tbody.innerHTML = paginatedData.map(i => {
       const statusClass = i.status === 'active' ? 'badge-active' : 
                           i.status === 'on_leave' ? 'badge-warning' : 'badge-expired';
       return `
@@ -296,7 +363,21 @@
         </td>
       </tr>
     `}).join('');
+
+    document.getElementById('instructors-pagination').innerHTML = 
+      renderPagination('instructors', instructors.length, currentPages.instructors, 'changeInstructorsPage');
   }
+
+  window.changeInstructorsPage = function(page) {
+    currentPages.instructors = page;
+    const query = document.getElementById('instructor-search').value.trim();
+    const filtered = query ? instructorsData.filter(i => 
+      i.first_name.toLowerCase().includes(query.toLowerCase()) ||
+      i.last_name.toLowerCase().includes(query.toLowerCase()) ||
+      i.email.toLowerCase().includes(query.toLowerCase())
+    ) : instructorsData;
+    renderInstructorsTable(filtered);
+  };
 
   function updateInstructorDropdowns() {
     const select = document.getElementById('class-instructor');
@@ -462,34 +543,51 @@
     try {
       const res = await fetch('/api/classes');
       classesData = await res.json();
-      const tbody = document.getElementById('classes-tbody');
-
-      if (classesData.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="6">No classes yet. Add an instructor first, then create a class.</td></tr>';
-        return;
-      }
-
-      tbody.innerHTML = classesData.map(c => {
-        const instructor = instructorsData.find(i => i.instructor_id === c.instructor_id);
-        const instructorName = instructor ? `${instructor.first_name} ${instructor.last_name}` : `ID: ${c.instructor_id}`;
-        const dt = new Date(c.date_time).toLocaleString();
-        return `<tr>
-          <td>${c.class_id}</td>
-          <td>${escapeHtml(c.class_name)}</td>
-          <td>${escapeHtml(instructorName)}</td>
-          <td>${dt}</td>
-          <td>${c.num_members || 0}</td>
-          <td>
-            <button class="btn btn-outline btn-sm" onclick="editClass(${c.class_id})">Edit</button>
-            <button class="btn btn-danger btn-sm" onclick="deleteClass(${c.class_id})">Delete</button>
-          </td>
-        </tr>`;
-      }).join('');
+      currentPages.classes = 1;
+      renderClassesTable(classesData);
     } catch {
-      document.getElementById('classes-tbody').innerHTML = 
-        '<tr><td colspan="6" class="error">Error loading classes</td></tr>';
+      const tbody = document.getElementById('classes-tbody');
+      if (!tbody.innerHTML || tbody.innerHTML.includes('Loading')) {
+        tbody.innerHTML = '<tr><td colspan="6" class="error">Error loading classes</td></tr>';
+      }
     }
   }
+
+  function renderClassesTable(classes) {
+    const tbody = document.getElementById('classes-tbody');
+    if (!classes.length) {
+      tbody.innerHTML = '<tr><td colspan="6">No classes yet. Add an instructor first, then create a class.</td></tr>';
+      document.getElementById('classes-pagination').innerHTML = '';
+      return;
+    }
+
+    const paginatedData = getPaginatedData(classes, currentPages.classes);
+    
+    tbody.innerHTML = paginatedData.map(c => {
+      const instructor = instructorsData.find(i => i.instructor_id === c.instructor_id);
+      const instructorName = instructor ? `${instructor.first_name} ${instructor.last_name}` : `ID: ${c.instructor_id}`;
+      const dt = new Date(c.date_time).toLocaleString();
+      return `<tr>
+        <td>${c.class_id}</td>
+        <td>${escapeHtml(c.class_name)}</td>
+        <td>${escapeHtml(instructorName)}</td>
+        <td>${dt}</td>
+        <td>${c.num_members || 0}</td>
+        <td>
+          <button class="btn btn-outline btn-sm" onclick="editClass(${c.class_id})">Edit</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteClass(${c.class_id})">Delete</button>
+        </td>
+      </tr>`;
+    }).join('');
+
+    document.getElementById('classes-pagination').innerHTML = 
+      renderPagination('classes', classes.length, currentPages.classes, 'changeClassesPage');
+  }
+
+  window.changeClassesPage = function(page) {
+    currentPages.classes = page;
+    renderClassesTable(classesData);
+  };
 
   // Add Class
   document.getElementById('add-class-btn').addEventListener('click', () => {
@@ -615,44 +713,65 @@
     }
   }
 
+  // Load members for names
   async function loadMemberships() {
     try {
-      const res = await fetch('/api/memberships');
-      const data = await res.json();
-      const tbody = document.getElementById('memberships-tbody');
-
-      if (data.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="9">No memberships found. Add a member first, then create a membership.</td></tr>';
-        return;
-      }
-
-      // Load members for names
-      await loadMembers('');
-
-      tbody.innerHTML = data.map(m => {
-        const member = membersData.find(mem => mem.member_id === m.member_id);
-        const memberName = member ? `${member.first_name} ${member.last_name}` : `ID: ${m.member_id}`;
-        const isActive = new Date(m.expire_date) >= new Date();
-        return `<tr>
-          <td>${m.membership_id}</td>
-          <td>${escapeHtml(memberName)}</td>
-          <td>${m.name}</td>
-          <td style="text-transform:capitalize">${m.type}</td>
-          <td>$${Number(m.price).toFixed(2)}</td>
-          <td>${m.start_date}</td>
-          <td>${m.expire_date}</td>
-          <td><span class="badge ${isActive ? 'badge-active' : 'badge-expired'}">${isActive ? 'Active' : 'Expired'}</span></td>
-          <td>
-            <button class="btn btn-outline btn-sm" onclick="editMembership(${m.membership_id})">Edit</button>
-            <button class="btn btn-danger btn-sm" onclick="deleteMembership(${m.membership_id})">Delete</button>
-          </td>
-        </tr>`;
-      }).join('');
+      const [membershipsRes, membersRes] = await Promise.all([
+        fetch('/api/memberships'),
+        fetch('/api/members')
+      ]);
+      
+      membershipsData = await membershipsRes.json();
+      membersData = await membersRes.json();
+      
+      currentPages.memberships = 1;
+      renderMembershipsTable(membershipsData);
     } catch {
-      document.getElementById('memberships-tbody').innerHTML = 
-        '<tr><td colspan="9" class="error">Error loading memberships</td></tr>';
+      const tbody = document.getElementById('memberships-tbody');
+      if (!tbody.innerHTML || tbody.innerHTML.includes('Loading')) {
+        tbody.innerHTML = '<tr><td colspan="9" class="error">Error loading memberships</td></tr>';
+      }
     }
   }
+
+  function renderMembershipsTable(memberships) {
+    const tbody = document.getElementById('memberships-tbody');
+    if (!memberships.length) {
+      tbody.innerHTML = '<tr><td colspan="9">No memberships found. Add a member first, then create a membership.</td></tr>';
+      document.getElementById('memberships-pagination').innerHTML = '';
+      return;
+    }
+
+    const paginatedData = getPaginatedData(memberships, currentPages.memberships);
+    
+    tbody.innerHTML = paginatedData.map(m => {
+      const member = membersData.find(mem => mem.member_id === m.member_id);
+      const memberName = member ? `${member.first_name} ${member.last_name}` : `ID: ${m.member_id}`;
+      const isActive = new Date(m.expire_date) >= new Date();
+      return `<tr>
+        <td>${m.membership_id}</td>
+        <td>${escapeHtml(memberName)}</td>
+        <td>${m.name}</td>
+        <td style="text-transform:capitalize">${m.type}</td>
+        <td>$${Number(m.price).toFixed(2)}</td>
+        <td>${m.start_date}</td>
+        <td>${m.expire_date}</td>
+        <td><span class="badge ${isActive ? 'badge-active' : 'badge-expired'}">${isActive ? 'Active' : 'Expired'}</span></td>
+        <td>
+          <button class="btn btn-outline btn-sm" onclick="editMembership(${m.membership_id})">Edit</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteMembership(${m.membership_id})">Delete</button>
+        </td>
+      </tr>`;
+    }).join('');
+
+    document.getElementById('memberships-pagination').innerHTML = 
+      renderPagination('memberships', memberships.length, currentPages.memberships, 'changeMembershipsPage');
+  }
+
+  window.changeMembershipsPage = function(page) {
+    currentPages.memberships = page;
+    renderMembershipsTable(membershipsData);
+  };
 
   // Add Membership
   document.getElementById('add-membership-btn').addEventListener('click', () => {

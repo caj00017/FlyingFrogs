@@ -13,7 +13,7 @@ console.log('🌱 Seeding database with sample data...\n');
 // ============ INSTRUCTORS ============
 console.log('Creating instructors...');
 try {
- const instructor1 = createInstructor('John', 'Smith', 'john@flyingfrogs.com', '5550101', '1985-03-15', 'active');
+ const instructor1 = createInstructor('John', 'Smith', 'john44@flyingfrogs.com', '5550101', '1985-03-15', 'active');
  console.log(`  ✓ Created instructor: John Smith (ID: ${instructor1})`);
 
 
@@ -28,7 +28,7 @@ try {
  const instructor4 = createInstructor('Emily', 'Davis', 'emily@flyingfrogs.com', '5550104', '1992-04-18', 'on_leave');
  console.log(`  ✓ Created instructor: Emily Davis (ID: ${instructor4})`);
 
- // New instructors (added 4/1/26)
+ // New instructors (added 5/1/26)
   const instructor5 = createInstructor('Carlos', 'Reyes', 'carlos@flyingfrogs.com', '5550105', '1987-09-05', 'active');
   console.log(`  ✓ Created instructor: Carlos Reyes (ID: ${instructor5})`);
  
@@ -40,6 +40,15 @@ try {
  
   const instructor8 = createInstructor('Natalie', 'Chen', 'natalie@flyingfrogs.com', '5550108', '1991-10-09', 'inactive');
   console.log(`  ✓ Created instructor: Natalie Chen (ID: ${instructor8})`);
+
+  const instructor9 = createInstructor('Marcus', 'Bell', 'marcus@flyingfrogs.com', '5550109', '1986-08-14', 'active');
+  console.log(`  ✓ Created instructor: Marcus Bell (ID: ${instructor9})`);
+
+  const instructor10 = createInstructor('Yuki', 'Tanaka', 'yuki@flyingfrogs.com', '5550110', '1993-05-27', 'active');
+  console.log(`  ✓ Created instructor: Yuki Tanaka (ID: ${instructor10})`);
+
+  const instructor11 = createInstructor('Fatima', 'Malik', 'fatima@flyingfrogs.com', '5550111', '1989-12-03', 'active');
+  console.log(`  ✓ Created instructor: Fatima Malik (ID: ${instructor11})`);
 } catch (error) {
  console.error('  ✗ Error creating instructors:', error.message);
 }
@@ -67,7 +76,7 @@ try {
  const member5 = createMember('Eva', 'Anderson', 'eva@email.com', '5550205', '1997-06-28');
  console.log(`  ✓ Created member: Eva Anderson (ID: ${member5})`);
 
- // New members (added 4/1/26)
+ // New members (added 5/1/26)
  const member6 = createMember('Steve', 'Anderson', 'steve@email.com', '5330205', '1993-06-27');
  console.log(`  ✓ Created member: Steve Anderson (ID: ${member6})`);
 
@@ -97,8 +106,69 @@ try {
  
   const member15 = createMember('Aisha', 'Okafor', 'aisha@email.com', '5550215', '2001-05-13');
   console.log(`  ✓ Created member: Aisha Okafor (ID: ${member15})`);
+
+ // New members (added 5/1/26)
+  const member16 = createMember('Nathan', 'Clarke', 'nathan@email.com', '5550216', '1989-03-24');
+  console.log(`  ✓ Created member: Nathan Clarke (ID: ${member16})`);
+ 
+  const member17 = createMember('Mei', 'Tanaka', 'mei@email.com', '5550217', '1998-11-02');
+  console.log(`  ✓ Created member: Mei Tanaka (ID: ${member17})`);
+ 
+  const member18 = createMember('Brandon', 'Scott', 'brandon@email.com', '5550218', '1994-07-17');
+  console.log(`  ✓ Created member: Brandon Scott (ID: ${member18})`);
+ 
+  const member19 = createMember('Fatima', 'Ali', 'fatima@email.com', '5550219', '1996-09-08');
+  console.log(`  ✓ Created member: Fatima Ali (ID: ${member19})`);
+ 
+  const member20 = createMember('Tyler', 'Bennett', 'tyler@email.com', '5550220', '1993-04-30');
+  console.log(`  ✓ Created member: Tyler Bennett (ID: ${member20})`);
+ 
+  const member21 = createMember('Hannah', 'Price', 'hannah@email.com', '5550221', '2000-01-15');
+  console.log(`  ✓ Created member: Hannah Price (ID: ${member21})`);
+ 
+  const member22 = createMember('Luis', 'Morales', 'luis@email.com', '5550222', '1987-06-11');
+  console.log(`  ✓ Created member: Luis Morales (ID: ${member22})`);
+ 
+  const member23 = createMember('Chloe', 'Evans', 'chloe@email.com', '5550223', '1999-12-20');
+  console.log(`  ✓ Created member: Chloe Evans (ID: ${member23})`);
+ 
+  const member24 = createMember('Jordan', 'Hayes', 'jordan@email.com', '5550224', '1995-08-03');
+  console.log(`  ✓ Created member: Jordan Hayes (ID: ${member24})`);
+ 
+  const member25 = createMember('Simone', 'Dubois', 'simone@email.com', '5550225', '1990-02-27');
+  console.log(`  ✓ Created member: Simone Dubois (ID: ${member25})`);
+ 
+  const member26 = createMember('Ethan', 'Flores', 'ethan@email.com', '5550226', '1997-10-14');
+  console.log(`  ✓ Created member: Ethan Flores (ID: ${member26})`);
+ 
+  const member27 = createMember('Yuki', 'Yamamoto', 'yuki@email.com', '5550227', '2002-05-09');
+  console.log(`  ✓ Created member: Yuki Yamamoto (ID: ${member27})`);
+ 
+  const member28 = createMember('Darius', 'Washington', 'darius@email.com', '5550228', '1986-08-22');
+  console.log(`  ✓ Created member: Darius Washington (ID: ${member28})`);
+ 
+  const member29 = createMember('Ingrid', 'Larsen', 'ingrid@email.com', '5550229', '1993-03-18');
+  console.log(`  ✓ Created member: Ingrid Larsen (ID: ${member29})`);
+ 
+  const member30 = createMember('Kevin', 'Osei', 'kevin@email.com', '5550230', '1991-11-07');
+  console.log(`  ✓ Created member: Kevin Osei (ID: ${member30})`);
+ 
+  const member31 = createMember('Bianca', 'Ferreira', 'bianca@email.com', '5550231', '1998-07-26');
+  console.log(`  ✓ Created member: Bianca Ferreira (ID: ${member31})`);
+ 
+  const member32 = createMember('Patrick', 'Nguyen', 'patricknguyen@email.com', '5550232', '1995-04-01');
+  console.log(`  ✓ Created member: Patrick Nguyen (ID: ${member32})`);
+ 
+  const member33 = createMember('Zoe', 'Campbell', 'zoe@email.com', '5550233', '2001-09-14');
+  console.log(`  ✓ Created member: Zoe Campbell (ID: ${member33})`);
+ 
+  const member34 = createMember('Andre', 'Petit', 'andre@email.com', '5550234', '1988-01-31');
+  console.log(`  ✓ Created member: Andre Petit (ID: ${member34})`);
+ 
+  const member35 = createMember('Nina', 'Kowalski', 'nina@email.com', '5550235', '1996-06-05');
+  console.log(`  ✓ Created member: Nina Kowalski (ID: ${member35})`);
 } catch (error) {
- console.error('  ✗ Error creating members:', error.message);
+  console.error('  ✗ Error creating members:', error.message);
 }
 
 
@@ -119,7 +189,7 @@ try {
   nextWeek.setDate(nextWeek.getDate() + 7);
   nextWeek.setHours(14, 0, 0, 0);
  
-  // New date helpers (added 4/1/26)
+  // New date helpers (added 5/1/26)
   const in3Days = new Date(today);
   in3Days.setDate(in3Days.getDate() + 3);
   in3Days.setHours(9, 0, 0, 0);
@@ -178,7 +248,7 @@ try {
  const class5 = createClass('Strength Training', 2, formatDateTime(nextWeek));
  console.log(`  ✓ Created class: Strength Training (ID: ${class5})`);
 
-// New classes (added 4/1/26)
+ // New classes (added 5/1/26)
   const class6 = createClass('Zumba', 5, formatDateTime(in3Days));
   console.log(`  ✓ Created class: Zumba (ID: ${class6})`);
  
@@ -220,7 +290,7 @@ try {
  const threeMonths = new Date(today);
  threeMonths.setMonth(threeMonths.getMonth() + 3);
 
-// New membership helpers (added 4/1/26)
+// New membership helpers (added 5/1/26)
  const twoMonthsAgo = new Date(today);
  twoMonthsAgo.setMonth(twoMonthsAgo.getMonth() - 2);
  const oneMonthAgo = new Date(today);
@@ -254,7 +324,7 @@ try {
  const membership5 = createMembership(5, 'Standard Plan', 34.99, 'monthly', formatDate(today), formatDate(nextMonth));
  console.log(`  ✓ Created membership: Standard Plan monthly for Member #5 (ID: ${membership5})`);
 
-// New memberships (added 4/1/26)
+ // New memberships (added 5/1/26)
   const membership6 = createMembership(6, 'Premium Plan', 499.99, 'annual', formatDate(today), formatDate(nextYear));
   console.log(`  ✓ Created membership: Premium Plan annual for Member #6 (ID: ${membership6})`);
  
@@ -284,6 +354,53 @@ try {
  
   const membership15 = createMembership(15, 'Premium Plan', 499.99, 'annual', formatDate(today), formatDate(nextYear));
   console.log(`  ✓ Created membership: Premium Plan annual for Member #15 (ID: ${membership15})`);
+
+  // New memberships (added 5/2/26)
+  const membership16 = createMembership(16, 'Standard Plan', 89.99, 'quarterly', formatDate(today), formatDate(threeMonths));
+  console.log(`  ✓ Created membership: Standard Plan quarterly for Member #16 (ID: ${membership16})`);
+
+  const membership17 = createMembership(17, 'Basic Plan', 19.99, 'monthly', formatDate(today), formatDate(nextMonth));
+  console.log(`  ✓ Created membership: Basic Plan monthly for Member #17 (ID: ${membership17})`);
+
+  const membership18 = createMembership(18, 'Premium Plan', 499.99, 'annual', formatDate(today), formatDate(nextYear));
+  console.log(`  ✓ Created membership: Premium Plan annual for Member #18 (ID: ${membership18})`);
+
+  const membership19 = createMembership(19, 'Standard Plan', 34.99, 'monthly', formatDate(today), formatDate(nextMonth));
+  console.log(`  ✓ Created membership: Standard Plan monthly for Member #19 (ID: ${membership19})`);
+
+  const membership20 = createMembership(20, 'Basic Plan', 49.99, 'quarterly', formatDate(lastMonth), formatDate(today));
+  console.log(`  ✓ Created membership: Basic Plan quarterly for Member #20 (EXPIRED) (ID: ${membership20})`);
+
+  const membership21 = createMembership(21, 'Premium Plan', 249.99, 'semi-annual', formatDate(today), formatDate(sixMonths));
+  console.log(`  ✓ Created membership: Premium Plan semi-annual for Member #21 (ID: ${membership21})`);
+
+  const membership22 = createMembership(22, 'Basic Plan', 19.99, 'monthly', formatDate(twoWeeksAgo), formatDate(twoWeeksAhead));
+  console.log(`  ✓ Created membership: Basic Plan monthly for Member #22 (ID: ${membership22})`);
+
+  const membership23 = createMembership(23, 'Standard Plan', 89.99, 'quarterly', formatDate(today), formatDate(threeMonths));
+  console.log(`  ✓ Created membership: Standard Plan quarterly for Member #23 (ID: ${membership23})`);
+
+  const membership24 = createMembership(24, 'Premium Plan', 499.99, 'annual', formatDate(today), formatDate(nextYear));
+  console.log(`  ✓ Created membership: Premium Plan annual for Member #24 (ID: ${membership24})`);
+
+  const membership25 = createMembership(25, 'Basic Plan', 19.99, 'monthly', formatDate(today), formatDate(nextMonth));
+  console.log(`  ✓ Created membership: Basic Plan monthly for Member #25 (ID: ${membership25})`);
+
+  const membership26 = createMembership(26, 'Standard Plan', 89.99, 'quarterly', formatDate(twoMonthsAgo), formatDate(oneMonthAgo));
+  console.log(`  ✓ Created membership: Standard Plan quarterly for Member #26 (EXPIRED) (ID: ${membership26})`);
+
+  const membership27 = createMembership(27, 'Premium Plan', 499.99, 'annual', formatDate(today), formatDate(nextYear));
+  console.log(`  ✓ Created membership: Premium Plan annual for Member #27 (ID: ${membership27})`);
+
+  const membership28 = createMembership(28, 'Basic Plan', 19.99, 'monthly', formatDate(today), formatDate(nextMonth));
+  console.log(`  ✓ Created membership: Basic Plan monthly for Member #28 (ID: ${membership28})`);
+
+  const membership29 = createMembership(29, 'Standard Plan', 249.99, 'semi-annual', formatDate(today), formatDate(sixMonths));
+  console.log(`  ✓ Created membership: Standard Plan semi-annual for Member #29 (ID: ${membership29})`);
+
+  const membership30 = createMembership(30, 'Premium Plan', 499.99, 'annual', formatDate(today), formatDate(nextYear));
+  console.log(`  ✓ Created membership: Premium Plan annual for Member #30 (ID: ${membership30})`);
+
 } catch (error) {
  console.error('  ✗ Error creating memberships:', error.message);
 }
@@ -327,7 +444,7 @@ try {
  const booking6 = createBooking(1, 5, formatDateTime(now), null, 'confirmed');
  console.log(`  ✓ Created booking: Member #1 → Class #5 (ID: ${booking6})`);
 
-// New bookings (added 4/1/26)
+ // New bookings (added 5/1/26)
   const booking7 = createBooking(7, 6, formatDateTime(now), null, 'confirmed');
   console.log(`  ✓ Created booking: Member #7 → Class #6 (ID: ${booking7})`);
  
@@ -337,8 +454,8 @@ try {
   const booking9 = createBooking(9, 7, formatDateTime(now), null, 'confirmed');
   console.log(`  ✓ Created booking: Member #9 → Class #7 (ID: ${booking9})`);
  
-  const booking10 = createBooking(10, 7, formatDateTime(now), null, 'waitlisted');
-  console.log(`  ✓ Created booking: Member #10 → Class #7 (WAITLISTED) (ID: ${booking10})`);
+  const booking10 = createBooking(10, 7, formatDateTime(now), null, 'cancelled');
+  console.log(`  ✓ Created booking: Member #10 → Class #7 (CANCELLED) (ID: ${booking10})`);
  
   const booking11 = createBooking(11, 8, formatDateTime(now), null, 'confirmed');
   console.log(`  ✓ Created booking: Member #11 → Class #8 (ID: ${booking11})`);
@@ -364,8 +481,8 @@ try {
   const booking18 = createBooking(5, 12, formatDateTime(now), null, 'confirmed');
   console.log(`  ✓ Created booking: Member #5 → Class #12 (ID: ${booking18})`);
  
-  const booking19 = createBooking(9, 13, formatDateTime(now), null, 'waitlisted');
-  console.log(`  ✓ Created booking: Member #9 → Class #13 (WAITLISTED) (ID: ${booking19})`);
+  const booking19 = createBooking(9, 13, formatDateTime(now), null, 'confirmed');
+  console.log(`  ✓ Created booking: Member #9 → Class #13 (ID: ${booking19})`);
  
   const booking20 = createBooking(3, 5, formatDateTime(now), null, 'confirmed');
   console.log(`  ✓ Created booking: Member #3 → Class #5 (ID: ${booking20})`);
@@ -376,9 +493,9 @@ try {
 
 console.log('\n✅ Sample data seeding complete!');
 console.log('\n📊 Summary:');
-console.log('   - 8 Instructors');
-console.log('   - 15 Members');
+console.log('   - 11 Instructors');
+console.log('   - 35 Members');
 console.log('   - 13 Classes');
 console.log('   - 15 Memberships (2 expired)');
-console.log('   - 20 Bookings (2 cancelled & 2 waitlisted)');
+console.log('   - 20 Bookings (3 cancelled)');
 console.log('\n🚀 Ready to start! Run: npm run start');

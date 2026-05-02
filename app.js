@@ -226,7 +226,7 @@ app.get('/api/instructors/:id', (req, res) => {
 app.put('/api/instructors/:id', (req, res) => {
   try {
     const { first_name, last_name, email, phone, status } = req.body;
-    const result = updateInstructor(parseInt(req.params.id), first_name, last_name, email, phone);
+    const result = updateInstructor(parseInt(req.params.id), first_name, last_name, email, phone, status);
     res.json({ changes: result, message: 'Instructor updated successfully' });
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -310,6 +310,16 @@ app.post('/api/bookings', (req, res) => {
   try {
     const { member_id, class_id, booking_time, cancellation_time, status } = req.body;
     const result = createBooking(member_id, class_id, booking_time, cancellation_time, status || 'confirmed');
+    
+    // Increment num_members in Classes table
+    const Database = require('better-sqlite3');
+    const db = new Database('source.db');
+    db.pragma('foreign_keys = ON');
+    
+    if (status === 'confirmed') {
+      db.prepare('UPDATE Classes SET num_members = num_members + 1 WHERE class_id = ?').run(class_id);
+    }
+    
     res.json({ booking_id: result, message: 'Booking created successfully' });
   } catch (error) {
     console.error('Error creating booking:', error);
@@ -343,10 +353,30 @@ app.get('/api/bookings/:id', (req, res) => {
 // PUT endpoint for updating Bookings
 app.put('/api/bookings/:id', (req, res) => {
   try {
-    const { member_id, class_id, booking_date } = req.body;
-    const result = updateBooking(parseInt(req.params.id), member_id, class_id, booking_date);
+    const Database = require('better-sqlite3');
+    const db = new Database('source.db');
+    db.pragma('foreign_keys = ON');
+    
+    const bookingId = parseInt(req.params.id);
+    const { member_id, class_id, booking_date, status } = req.body;
+    
+    // Get old booking to compare status
+    const oldBooking = db.prepare('SELECT * FROM Bookings WHERE booking_id = ?').get(bookingId);
+    
+    const result = updateBooking(bookingId, member_id, class_id, booking_date);
+    
+    // Update num_members if status changed
+    if (status && oldBooking) {
+      if (status === 'confirmed' && oldBooking.status !== 'confirmed') {
+        db.prepare('UPDATE Classes SET num_members = num_members + 1 WHERE class_id = ?').run(class_id);
+      } else if (status !== 'confirmed' && oldBooking.status === 'confirmed') {
+        db.prepare('UPDATE Classes SET num_members = MAX(0, num_members - 1) WHERE class_id = ?').run(class_id);
+      }
+    }
+    
     res.json({ changes: result, message: 'Booking updated successfully' });
   } catch (error) {
+    console.error('Error updating booking:', error);
     res.status(500).json({ error: error.message });
   }
 });
@@ -354,12 +384,57 @@ app.put('/api/bookings/:id', (req, res) => {
 // delete endpoint for deleting bookings by ID
 app.delete('/api/bookings/:id', (req, res) => {
   try {
+    const Database = require('better-sqlite3');
+    const db = new Database('source.db');
+    db.pragma('foreign_keys = ON');
+    
+    // Get the booking first to know the class_id and status
+    const booking = db.prepare('SELECT * FROM Bookings WHERE booking_id = ?').get(parseInt(req.params.id));
+    
+    if (!booking) {
+      return res.status(404).json({ error: 'Booking not found' });
+    }
+    
     const result = deleteBooking(parseInt(req.params.id));
+    
+    // Decrement num_members if booking was confirmed
+    if (booking.status === 'confirmed') {
+      db.prepare('UPDATE Classes SET num_members = MAX(0, num_members - 1) WHERE class_id = ?').run(booking.class_id);
+    }
+    
     res.json({ changes: result, message: 'Booking deleted successfully' });
   } catch (error) {
+    console.error('Error deleting booking:', error);
     res.status(500).json({ error: error.message });
   }
 });
+
+// Fix enrollment numbers on startup
+(function fixEnrollmentNumbers() {
+  try {
+    const Database = require('better-sqlite3');
+    const db = new Database('source.db');
+    db.pragma('foreign_keys = ON');
+    
+    console.log('Fixing enrollment numbers...');
+    
+    const classes = db.prepare('SELECT class_id FROM Classes').all();
+    const updateStmt = db.prepare('UPDATE Classes SET num_members = ? WHERE class_id = ?');
+    const countStmt = db.prepare('SELECT COUNT(*) as count FROM Bookings WHERE class_id = ? AND status IN (\'confirmed\', \'attended\')');
+    
+    const transaction = db.transaction(() => {
+      for (const cls of classes) {
+        const { count } = countStmt.get(cls.class_id);
+        updateStmt.run(count, cls.class_id);
+      }
+    });
+    
+    transaction();
+    console.log('Enrollment numbers updated');
+  } catch (error) {
+    console.error('Error fixing enrollment:', error.message);
+  }
+})();
 
 // Start server listening
 app.listen(port, () => {

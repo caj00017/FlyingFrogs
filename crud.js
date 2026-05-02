@@ -314,18 +314,18 @@ function readAllInstructors() {
  * @returns {number} Number of rows affected (0 means no instructor with that ID was found)
  * @author Nathan McDonald
  */
-function updateInstructor(instructor_id, first_name, last_name, email, phone) {
+function updateInstructor(instructor_id, first_name, last_name, email, phone, status) {
   const sql = `
     UPDATE Instructors
-    SET first_name = ?, last_name = ?, email = ?, phone = ?
+    SET first_name = ?, last_name = ?, email = ?, phone = ?, status = ?
     WHERE instructor_id = ?
   `;
  
-  console.log("Attempting to execute query: " + sql);
+  console.log(`Updating instructor ${instructor_id}: status to ${status}`);
  
   const stmt = db.prepare(sql);
  
-  const result = stmt.run(first_name, last_name, email, String(phone), instructor_id);
+  const result = stmt.run(first_name, last_name, email, String(phone), status, instructor_id);
  
   return result.changes;
 }
