@@ -105,6 +105,28 @@ function createBookingsTable() {
     db.exec(sql);
 }
 
+function createIndexes() {
+  const sql = `
+    -- Foreign keys
+    CREATE INDEX IF NOT EXISTS idx_memberships_member_id ON Memberships(member_id);
+    CREATE INDEX IF NOT EXISTS idx_classes_instructor_id ON Classes(instructor_id);
+    CREATE INDEX IF NOT EXISTS idx_bookings_member_id    ON Bookings(member_id);
+    CREATE INDEX IF NOT EXISTS idx_bookings_class_id     ON Bookings(class_id);
+
+    -- Search / filter
+    CREATE INDEX IF NOT EXISTS idx_members_last_name        ON Members(last_name  COLLATE NOCASE);
+    CREATE INDEX IF NOT EXISTS idx_members_first_name       ON Members(first_name COLLATE NOCASE);
+    CREATE INDEX IF NOT EXISTS idx_classes_date_time        ON Classes(date_time);
+    CREATE INDEX IF NOT EXISTS idx_memberships_expire_date  ON Memberships(expire_date);
+
+    -- Composites
+    CREATE INDEX IF NOT EXISTS idx_bookings_member_status ON Bookings(member_id, status);
+    CREATE INDEX IF NOT EXISTS idx_bookings_class_status  ON Bookings(class_id, status);
+  `;
+  console.log("Creating indexes...");
+  db.exec(sql);
+}
+
 // create all necessary tables for the app
 createMembersTable();
 createInstructorsTable();
